@@ -32,6 +32,8 @@ export class UsuariosService {
     async borrarUsuario(idUsuario: string): Promise<UsuarioDocument>{
         return await this.usuario.findByIdAndUpdate(idUsuario, { estado: false });
     }
+
+    
     
 
 }

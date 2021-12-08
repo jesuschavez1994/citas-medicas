@@ -14,6 +14,6 @@ import { LoginController } from './controllers/auth/login/login.controller';
     AuthModule,
   ],
   controllers: [AppController, LoginController],
-  providers: [AppService, AuthService],
+  providers: [AppService],
 })
 export class AppModule {}
