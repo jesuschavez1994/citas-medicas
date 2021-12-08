@@ -5,14 +5,17 @@ import { Usuario, UsuarioSchema } from 'src/core/schemas/usuario.schema';
 import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
 import { UserAlreadyExistsContraint } from 'src/helper/verificacion-correo';
 
-
 @Module({
   imports: [
     MongooseModule
-    .forFeature([{ name: Usuario.name, schema: UsuarioSchema }])
+    .forFeature([{ name: Usuario.name, schema: UsuarioSchema }]),
+    
   ],
   controllers: [UsuariosController],
-  providers: [UsuariosService, UserAlreadyExistsContraint],
+  providers: [
+    UsuariosService,
+    UserAlreadyExistsContraint
+  ],
   exports: [UsuariosService]
 })
 export class UsuariosModule{}
