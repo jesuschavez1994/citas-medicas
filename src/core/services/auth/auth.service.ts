@@ -1,32 +1,41 @@
-import { Injectable, Res } from '@nestjs/common';
+import {  Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import * as bcrypt from 'bcrypt';
+
 @Injectable()
 export class AuthService {
 
     constructor(
         private readonly _usuariosService: UsuariosService,
         private jwtService: JwtService
-        ) {}
+    ) {}
 
-    async validarUsuario(correo: string, password: string): Promise<any> {
+    async validarUsuario(username: string, password: string): Promise<any> {
         // Verificamos si el usuario existe, a traves del correo
-        const usuario = await this._usuariosService.obtenerUsuario(correo);
+        const user = await this._usuariosService.obtenerUsuario(username);
         // verificar la contraseña
-        const validarPassword = bcrypt.compareSync( password, usuario.password );
+        const validarPassword = bcrypt.compareSync( password, user.password );
         // validamos si existe el usuario y el password es correcto
-        if(usuario && validarPassword) {
-            const { password, ...result} = usuario;
+        if(user && validarPassword) {
+            const { password, ...result} = user;
             return result;
         }
         return null;
     }
 
     async login(user: any) {
+        // extraemos los datos del usuario
+        const result = user._doc;
+        // sacamos de result los siguientes valores
+        const { __v, _id, password, ...usuario } =  result;
+        // renombramos el id
+        usuario.id = _id;
         const payload = { username: user.correo, sub: user.id };
+        // generamos el token con la informacion del usuario
         return {
-          access_token: this.jwtService.sign(payload),
+            usuario,
+            token: this.jwtService.sign(payload),
         };
     }
 }

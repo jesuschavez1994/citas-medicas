@@ -20,6 +20,12 @@ export class UsuariosController {
         .obtenerUsuarios( Number(desde), Number(limite) );
         return res.status(HttpStatus.OK).json({ usuarios });
     }
+
+    @Post('usuario')
+    async obtenerUsuario(@Res() res: Response, @Body() body: any){
+        const usuario = await this._usuarioService.obtenerUsuario(body.correo);
+        return res.status(HttpStatus.OK).json({ usuario });
+    }
     
     @Post('crear-usuario')
     async crearUsuario(@Res() res: Response, @Body() body: CrearUsuarioDTO ) {

@@ -6,7 +6,7 @@ import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
 
 @Injectable()
 export class UsuariosService {
-    
+
     constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioDocument> ) {}
 
     async obtenerUsuarios(desde?: number, limite?: number): Promise<UsuarioDocument[]>{
@@ -33,7 +33,5 @@ export class UsuariosService {
         return await this.usuario.findByIdAndUpdate(idUsuario, { estado: false });
     }
 
-    
-    
 
 }
