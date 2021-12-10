@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Param, Query, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Param, Query, UsePipes, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ActualizarUsuarioDTO, BorrarUsuarioDTO, CrearUsuarioDTO } from 'src/core/dto/usuario.dto';
 import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
@@ -6,6 +6,8 @@ import * as bcrypt from 'bcrypt';
 import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
+
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -42,6 +44,7 @@ export class UsuariosController {
         })
     }
 
+    @UseGuards(JwtAuthGuard)
     @Put('actualizar-usuario')
     async actualizarusuario(@Res() res: Response, @Body() body: ActualizarUsuarioDTO ){
         // Si el password existe lo actualizamos
@@ -59,6 +62,7 @@ export class UsuariosController {
         : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Usuario no encontrado' })  
     }
     
+    @UseGuards(JwtAuthGuard)
     @Delete('borrar-usuario')
     async borrarUsuario(@Res() res: Response, @Body() body: BorrarUsuarioDTO) {
         // Esperamos que el servicio responda

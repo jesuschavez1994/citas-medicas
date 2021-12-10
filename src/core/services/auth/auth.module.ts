@@ -5,6 +5,8 @@ import { UsuariosModule } from 'src/controllers/usuarios/usuarios.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
+import { JwtStrategy } from './jwt.strategy';
+
 @Module({
     imports: [
         UsuariosModule,
@@ -17,6 +19,7 @@ import { jwtConstants } from './constants';
     providers: [
         AuthService,
         LocalStrategy,
+        JwtStrategy
     ],
     exports: [AuthService],
 })
