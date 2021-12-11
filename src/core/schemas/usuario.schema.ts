@@ -35,6 +35,16 @@ export class Usuario {
     default: false,
   })
   google: boolean;
+
+  @Prop({
+    type: String,
+  })
+  refreshtoken:string;
+
+  @Prop({
+    type: String,
+  })
+  refreshtokenexpires: Date;
 }
 
 

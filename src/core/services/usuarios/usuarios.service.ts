@@ -15,7 +15,7 @@ export class UsuariosService {
         .limit(limite);
     }
 
-    async obtenerUsuario(correo: string): Promise<UsuarioDocument>{
+    async obtenerUsuario(correo: string): Promise<any>{
         return await this.usuario.findOne({ correo });
     }
 
@@ -31,6 +31,10 @@ export class UsuariosService {
 
     async borrarUsuario(idUsuario: string): Promise<UsuarioDocument>{
         return await this.usuario.findByIdAndUpdate(idUsuario, { estado: false });
+    }
+
+    async guardarTokenRefresh(idUsuario: string, refreshtoken: string, refreshtokenexpires: Date): Promise<UsuarioDocument>{
+        return await this.usuario.findByIdAndUpdate(idUsuario, { refreshtoken: refreshtoken, refreshtokenexpires } , {new: true});
     }
 
 
