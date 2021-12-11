@@ -13,7 +13,7 @@ import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
 export class UsuariosController {
 
     constructor(
-    @InjectModel(Usuario.name) private usuario: Model<UsuarioDocument>,
+    @InjectModel(Usuario.name) private readonly usuario: Model<UsuarioDocument>,
     private readonly _usuarioService: UsuariosService) {}
 
     @Get()
