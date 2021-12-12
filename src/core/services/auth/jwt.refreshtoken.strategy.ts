@@ -28,7 +28,6 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy,"jwt-refr
         // sacmos del usuario el password, id, __v
         const { __v, _id, password, ...resul } =  usuario.toObject();
         // verificamos si el usuario existe
-        console.log(resul);
         if(!resul){
             throw new UnauthorizedException();
         }
