@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import {Injectable, UnauthorizedException, Body} from '@nestjs/common';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { jwtConstants } from './constants';
 import  { parseJwt }  from '../../../helper/parseJwt'
@@ -28,6 +28,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy,"jwt-refr
         // sacmos del usuario el password, id, __v
         const { __v, _id, password, ...resul } =  usuario.toObject();
         // verificamos si el usuario existe
+        console.log(resul);
         if(!resul){
             throw new UnauthorizedException();
         }

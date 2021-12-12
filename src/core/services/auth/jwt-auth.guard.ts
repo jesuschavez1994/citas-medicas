@@ -1,12 +1,11 @@
 import {
     ExecutionContext,
-    HttpStatus,
     Injectable,
     Res,
     UnauthorizedException,
   } from '@nestjs/common';
   import { AuthGuard } from '@nestjs/passport';
-  import {  JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+  import { TokenExpiredError } from 'jsonwebtoken';
   import { Response } from 'express';
 
 @Injectable()

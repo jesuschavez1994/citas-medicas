@@ -19,6 +19,7 @@ export class AuthService {
         const validarPassword = bcrypt.compareSync( password, user.password );
         // validamos si existe el usuario y el password es correcto
         if(user && validarPassword) {
+            // retornamos el usuario
             const { password, ...result} = user;
             return result;
         }

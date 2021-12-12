@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Param, Query, UsePipes, UseGuards } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, UseGuards } from '@nestjs/common';
+import { Response } from 'express';
 import { ActualizarUsuarioDTO, BorrarUsuarioDTO, CrearUsuarioDTO } from 'src/core/dto/usuario.dto';
 import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
 import * as bcrypt from 'bcrypt';
