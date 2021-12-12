@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import * as bcrypt from 'bcrypt';
 import * as randomToken from 'rand-token'; // npm install rand-token --save
-//import * as moment from 'moment'; // npm install moment --save
 
 @Injectable()
 export class AuthService {
@@ -28,7 +27,7 @@ export class AuthService {
 
     async generateRefreshToken(userId):  Promise<string>{
         // Generando el token de actualización.
-        var refreshToken = randomToken.generate(16); 
+        var refreshToken = randomToken.generate(32); 
         //Definición del tiempo de vencimiento del token de actualización.
         var expirydate =new Date();
         expirydate.setDate(expirydate.getDate() + 6);
@@ -45,7 +44,9 @@ export class AuthService {
         const { __v, _id, password, ...usuario } =  result;
         // renombramos el id
         usuario.id = _id;
+        // extraemos el correo y id de usuario
        const {correo, id } = usuario;
+       // construimos el payload
         const payload = { username: correo, sub: id };
         // generamos el token con la informacion del usuario
         return {
