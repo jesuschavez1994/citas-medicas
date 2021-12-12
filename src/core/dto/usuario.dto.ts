@@ -26,7 +26,9 @@ export class CrearUsuarioDTO{
     google: boolean;
     @IsOptional()
     @IsMongoId({ message: 'El id no es valido' })
-    id?: string
+    id?: string;
+    @IsOptional()
+    avatar?: string;
 }
 
 export class ActualizarUsuarioDTO{
@@ -46,7 +48,9 @@ export class ActualizarUsuarioDTO{
     google: boolean;
     @IsNotEmpty()
     @IsMongoId({ message: 'El id no es valido' })
-    id?: string
+    id?: string;
+    @IsOptional()
+    avatar?: string;
 }
 
 export class BorrarUsuarioDTO{
