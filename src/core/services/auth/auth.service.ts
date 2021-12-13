@@ -15,6 +15,9 @@ export class AuthService {
     async validarUsuario(username: string, password: string): Promise<any> {
         // Verificamos si el usuario existe, a traves del correo
         const user = await this._usuariosService.obtenerUsuario(username);
+        if(!user) {
+            return false;
+        }
         // verificar la contraseña
         const validarPassword = bcrypt.compareSync( password, user.password );
         // validamos si existe el usuario y el password es correcto
