@@ -56,7 +56,7 @@ export class AuthService {
         return {
             //usuario,
             token: this.jwtService.sign(payload),
-            refreshToken: await this.generateRefreshToken(result._id)
+            refreshToken: await this.generateRefreshToken(id)
         };
     }
 }

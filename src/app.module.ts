@@ -5,10 +5,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsuariosModule } from './controllers/usuarios/usuarios.module';
 import { AuthModule } from './core/services/auth/auth.module';
 import { LoginController } from './controllers/auth/login/login.controller';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://jesus:NocS65l9MZWQSvoL@cluster0.ozezs.mongodb.net/NodeCursoApp'),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     UsuariosModule,
     AuthModule,
   ],

@@ -31,15 +31,17 @@ export class LoginController {
     @UseGuards(AuthGuard('jwt-refreshtoken'))
     @Post('auth/refreshtoken')
     async refreshToken(@Request() req, @Res() res: Response){
-        try {
-            return await this._authService.login(req.user);
-        } catch (error) {
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: error.message,
-                mensaje: 'Error al autenticar usuario'
-            })  
-        }
+      try {
+        return  res.status(HttpStatus.OK).json(
+            await this._authService.login(req.user),
+        )
+      } catch (error) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: error.message,
+            mensaje: 'Error al autenticar usuario'
+        }) 
+      }
     }
 
     @Post('auth/google')
