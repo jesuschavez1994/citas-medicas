@@ -6,14 +6,13 @@ import { LocalAuthGuard } from 'src/core/services/auth/local-auth.guard';
 import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
 import { verificacionGoogle } from 'src/helper/verificacion-google';
 
-@Controller()
+@Controller('api/auth')
 export class LoginController {
-    constructor(
-        private _authService: AuthService, 
-        private readonly _usuariosService :UsuariosService
-    ) {}
-   @UseGuards(LocalAuthGuard)
-    @Post('auth/login')
+
+    constructor(private _authService: AuthService, private readonly _usuariosService :UsuariosService) {}
+
+    @UseGuards(LocalAuthGuard)
+    @Post('login')
     async login(@Request() req, @Res() res: Response) {
         try {
             return  res.status(HttpStatus.OK).json(
@@ -29,7 +28,7 @@ export class LoginController {
     }
 
     @UseGuards(AuthGuard('jwt-refreshtoken'))
-    @Post('auth/refreshtoken')
+    @Post('refreshtoken')
     async refreshToken(@Request() req, @Res() res: Response){
       try {
         return  res.status(HttpStatus.OK).json(
@@ -44,7 +43,7 @@ export class LoginController {
       }
     }
 
-    @Post('auth/google')
+    @Post('google')
     async googleLogin(@Request() req, @Res() res: Response) {
         // obtenemos el id_token de usuario proporcionada por google
         const { id_token } = req.body;

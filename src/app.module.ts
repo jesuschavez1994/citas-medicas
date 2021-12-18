@@ -6,6 +6,8 @@ import { UsuariosModule } from './controllers/usuarios/usuarios.module';
 import { AuthModule } from './core/services/auth/auth.module';
 import { LoginController } from './controllers/auth/login/login.controller';
 import { ConfigModule } from '@nestjs/config';
+import { EventosCalendarioModule } from './controllers/eventos-calendario/eventos-calendario.module';
+
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     MongooseModule.forRoot(process.env.MONGO_URI),
     UsuariosModule,
     AuthModule,
+    EventosCalendarioModule,
   ],
   controllers: [AppController, LoginController],
   providers: [AppService],

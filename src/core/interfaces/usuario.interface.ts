@@ -5,9 +5,9 @@ export interface UsuarioInterface extends Document{
     estado: boolean;
     correo: string;
     nombre: string;
-    _id: string;
     password: string;
-    __v: number;
     refreshtoken?: string
     refreshtokenexpires?: Date
+    __v: number;
+    _id: string;
 }

@@ -15,6 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,  
       // secreto para validar el token
       secretOrKey: process.env.SECRET_JWT, 
+      passReqToCallback: true,
     });
   }
 

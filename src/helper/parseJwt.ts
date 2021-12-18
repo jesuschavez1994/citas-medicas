@@ -1,4 +1,3 @@
-
 export const parseJwt = async (token: string) => {
     let base64Url = token.split('.')[1]; // token you get
     let base64 = base64Url.replace('-', '+').replace('_', '/');

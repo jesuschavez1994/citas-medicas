@@ -7,10 +7,7 @@ import * as randomToken from 'rand-token'; // npm install rand-token --save
 @Injectable()
 export class AuthService {
 
-    constructor(
-        private readonly _usuariosService: UsuariosService,
-        private jwtService: JwtService
-    ) {}
+    constructor(private readonly _usuariosService: UsuariosService, private jwtService: JwtService) {}
 
     async validarUsuario(username: string, password: string): Promise<any> {
         // Verificamos si el usuario existe, a traves del correo
@@ -21,7 +18,7 @@ export class AuthService {
         // verificar la contraseña
         const validarPassword = bcrypt.compareSync( password, user.password );
         // validamos si existe el usuario y el password es correcto
-        if(user && validarPassword) {
+        if(user && validarPassword && user.estado) {
             // retornamos el usuario
             const { password, ...result} = user;
             return result;
@@ -54,7 +51,6 @@ export class AuthService {
         const payload = { username: correo, sub: id };
         // generamos el token con la informacion del usuario
         return {
-            //usuario,
             token: this.jwtService.sign(payload),
             refreshToken: await this.generateRefreshToken(id)
         };

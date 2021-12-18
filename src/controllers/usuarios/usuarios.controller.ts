@@ -9,7 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
 
 
-@Controller('usuarios')
+@Controller('api/usuarios')
 export class UsuariosController {
 
     constructor(
@@ -27,7 +27,7 @@ export class UsuariosController {
         }
     }
 
-    @Post('usuario')
+    @Post('obtener-usuario')
     async obtenerUsuario(@Res() res: Response, @Body() body: any){
         try {
             const usuario = await this._usuarioService.obtenerUsuario(body.correo);

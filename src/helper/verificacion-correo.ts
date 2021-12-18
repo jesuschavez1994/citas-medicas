@@ -1,11 +1,11 @@
 import { InjectModel } from '@nestjs/mongoose';
 import {
-    registerDecorator,
-    ValidationOptions,
-    ValidatorConstraint,
-    ValidatorConstraintInterface,
-    ValidationArguments,
-  } from 'class-validator';
+  registerDecorator,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
+} from 'class-validator';
 import { Model } from 'mongoose';
 import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
 import { Injectable } from '@nestjs/common';
@@ -13,24 +13,24 @@ import { Injectable } from '@nestjs/common';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-  export class UserAlreadyExistsContraint implements ValidatorConstraintInterface {
-    constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioDocument>) {}
-    validate(correo: string, args: ValidationArguments) {
-      return this.usuario.findOne({correo}).then(user => {
-        if (user) return false;
-        return true;
-      });
-    }
+export class UserAlreadyExistsContraint implements ValidatorConstraintInterface {
+  constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioDocument>) {}
+  validate(correo: string, args: ValidationArguments) {
+    return this.usuario.findOne({correo}).then(user => {
+      if (user) return false;
+      return true;
+    });
+  }
 }
   
 export function IsUserAlreadyExist(validationOptions?: ValidationOptions) {
-    return function (object: Object, propertyName: string) {
-      registerDecorator({
-        target: object.constructor,
-        propertyName: propertyName,
-        options: validationOptions,
-        constraints: [],
-        validator: UserAlreadyExistsContraint,
-      });
-    };
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: UserAlreadyExistsContraint,
+    });
+  };
 }
