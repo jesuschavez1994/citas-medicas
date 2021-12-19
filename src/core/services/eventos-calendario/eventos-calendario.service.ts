@@ -21,11 +21,10 @@ export class EventosCalendarioService {
     }
 
     async obtenerEventos(usuario: string, pagina?: number, limite?: number): Promise<any> {
-        // configuracion de la paginacion
-        const query = { estado: true };
         return await Promise.all([
             // numero total de eventos en el calendario
             this.eventoCalendario.find({usuario}).count({}),
+            // listado de eventos paginados
             this.eventoCalendario.find({usuario})
             .skip((limite * pagina) - limite)
             .limit(limite)
