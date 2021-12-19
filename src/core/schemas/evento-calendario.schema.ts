@@ -39,7 +39,6 @@ export class EventoCalendario {
 
 }
 
-
 export const EventoCalendarioSchema = SchemaFactory.createForClass(EventoCalendario);
 // Metodo para extraer de  UsuarioSchema el password y la version: __v
 EventoCalendarioSchema.methods.toJSON = function(this: any) {
@@ -47,3 +46,4 @@ EventoCalendarioSchema.methods.toJSON = function(this: any) {
   evento.id = _id;
   return evento;
 }
+

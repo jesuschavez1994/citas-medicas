@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { actualizarEventoDTO, crearEventoDTO } from 'src/core/dto/evento-calendario.dto';
 import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
@@ -10,7 +10,7 @@ export class EventosCalendarioController {
     constructor(private readonly _eventoCalendarioService: EventosCalendarioService) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post('crear')
+    @Post('crear-evento')
     async crearEventoCalendario(@Res() res: Response, @Body() body: crearEventoDTO, @Req() req: any) {
         try {
             const { id: idUsuario } = req;
@@ -25,17 +25,27 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('obtener')
-    async obtenerEventos(@Res() res: Response, @Req() req: any) {
+    @Get('obtener-eventos')
+    async obtenerEventos(
+        @Res() res: Response, 
+        @Req() req: any, 
+        @Query('pagina') pagina: number = 1,
+        @Query('limite') limite: number = 5) {
         // obtenemos el id del usuario del req
         const { id: usuario } = req;
+
         try {
             // obtenemos los eventos creados por el usuario
-            const eventos = await this._eventoCalendarioService.obtenerEventos(usuario);
+            const [total, eventos] = await this._eventoCalendarioService.obtenerEventos(usuario, Number(pagina), Number(limite));
             // retornamos la respuesta de los eventos
             return (eventos.length > 0 ) 
             // si existen eventos los enviamos
-            ? res.status(HttpStatus.OK).json({ eventos })
+            ? res.status(HttpStatus.OK).json({ 
+                eventos,
+                totalEventos: total,
+                totalPaginas: Math.ceil(total / limite), 
+                paginaActual: pagina,
+            })
             // si no existen eventos creados, retornamos el siguiente mensaje
             : res.status(HttpStatus.OK).json({ eventos, mensaje: 'No hay eventos creados' });
             
@@ -45,7 +55,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('actualizar/:id')
+    @Put('actualizar-evento/:id')
     async actualizarEvento(@Res() res: Response, @Body() body: actualizarEventoDTO, @Param('id') id: string) {
         try {
             const evento = await this._eventoCalendarioService.actualizarEvento(body, id);
@@ -58,7 +68,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete('eliminar/:id')
+    @Delete('eliminar-evento/:id')
     async eliminarEvento(@Res() res: Response, @Param('id') id: string){
         try {
             // verififcamos que el evento exista

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { exec } from 'child_process';
 import { Model } from 'mongoose';
 import { crearEventoDTO } from 'src/core/dto/evento-calendario.dto';
 import { EventoCalendarioInterface } from 'src/core/interfaces/evento-calendario.interface';
@@ -19,8 +20,17 @@ export class EventosCalendarioService {
         return await crearEvento.save();
     }
 
-    async obtenerEventos(usuario: string): Promise<EventoCalendarioInterface[]> {
-        return await this.eventoCalendario.find({usuario}).populate('usuario', 'nombre correo estado google');
+    async obtenerEventos(usuario: string, pagina?: number, limite?: number): Promise<any> {
+        // configuracion de la paginacion
+        const query = { estado: true };
+        return await Promise.all([
+            // numero total de eventos en el calendario
+            this.eventoCalendario.find({usuario}).count({}),
+            this.eventoCalendario.find({usuario})
+            .skip((limite * pagina) - limite)
+            .limit(limite)
+            .populate('usuario', 'nombre correo estado google')
+        ]) 
     }
 
     async actualizarEvento(body, id: string){
