@@ -1,10 +1,7 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Put, Req, Request, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { actualizarEventoDTO, crearEventoDTO } from 'src/core/dto/evento-calendario.dto';
-import { EventoCalendarioInterface, EventoInterface } from 'src/core/interfaces/evento-calendario.interface';
-import { UsuarioInterface } from 'src/core/interfaces/usuario.interface';
 import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
-import { LocalAuthGuard } from 'src/core/services/auth/local-auth.guard';
 import { EventosCalendarioService } from 'src/core/services/eventos-calendario/eventos-calendario.service';
 
 @Controller('api/eventos-calendario')
@@ -28,7 +25,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('obtener-eventos')
+    @Get('obtener')
     async obtenerEventos(@Res() res: Response, @Req() req: any) {
         // obtenemos el id del usuario del req
         const { id: usuario } = req;
@@ -49,12 +46,27 @@ export class EventosCalendarioController {
 
     @UseGuards(JwtAuthGuard)
     @Put('actualizar/:id')
-    async actualizarEvento(@Res() res: Response, @Body() body: actualizarEventoDTO, @Req() req: any, @Param('id') id: string) {
+    async actualizarEvento(@Res() res: Response, @Body() body: actualizarEventoDTO, @Param('id') id: string) {
         try {
             const evento = await this._eventoCalendarioService.actualizarEvento(body, id);
-            if(evento){
-                return res.status(HttpStatus.OK).json({ evento, mensaje: 'Evento actualizado' });
-            }
+            return (evento) 
+            ?  res.status(HttpStatus.OK).json({  message: 'Evento actualizado', evento })
+            : res.status(HttpStatus.BAD_REQUEST).json({ error: 'No se pudo actualizar el evento' });
+        }catch (error) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete('eliminar/:id')
+    async eliminarEvento(@Res() res: Response, @Param('id') id: string){
+        try {
+            // verififcamos que el evento exista
+            const eventoEliminado = await this._eventoCalendarioService.eliminarEvento(id);
+            return (eventoEliminado)
+            ? res.status(HttpStatus.OK).json({ mensaje: 'Evento Eliminado' })
+            : res.status(HttpStatus.BAD_REQUEST).json({ mensaje: 'Evento no existe' })
+            
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
         }

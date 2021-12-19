@@ -23,8 +23,19 @@ export class EventosCalendarioService {
         return await this.eventoCalendario.find({usuario}).populate('usuario', 'nombre correo estado google');
     }
 
-    async actualizarEvento(body, id){
+    async actualizarEvento(body, id: string){
         return await this.eventoCalendario.findByIdAndUpdate(id, body, {new: true}).populate('usuario', 'nombre correo estado google');
+    }
+
+    async eliminarEvento(id: string){
+        // verificamos que existe el evento
+        const evento = await this.eventoCalendario.findById(id);
+        // si existe, lo eliminamos
+        if(evento){
+            return await this.eventoCalendario.findByIdAndDelete(id);
+        }else{
+            return false
+        }
     }
 
 }
