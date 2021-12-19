@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { exec } from 'child_process';
 import { Model } from 'mongoose';
 import { crearEventoDTO } from 'src/core/dto/evento-calendario.dto';
-import { EventoCalendarioInterface } from 'src/core/interfaces/evento-calendario.interface';
 import { EventoCalendario, EventoCalendarioDocument } from 'src/core/schemas/evento-calendario.schema';
 
 @Injectable()
