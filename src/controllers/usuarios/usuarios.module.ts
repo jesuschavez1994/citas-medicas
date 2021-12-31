@@ -1,9 +1,9 @@
 import { Module  } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsuariosController } from './usuarios.controller';
-import { Usuario, UsuarioSchema } from 'src/core/schemas/usuario.schema';
-import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
-import { UserAlreadyExistsContraint } from 'src/helper/verificacion-correo';
+import { Usuario, UsuarioSchema } from '../../core/schemas/usuario.schema';
+import { UsuariosService } from '../../core/services/usuarios/usuarios.service';
+import { UserAlreadyExistsContraint } from '../../helper/verificacion-correo';
 
 @Module({
   imports: [

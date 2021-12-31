@@ -9,6 +9,7 @@ export class AuthService {
 
     constructor(private readonly _usuariosService: UsuariosService, private jwtService: JwtService) {}
 
+    //✔️  test unitario //
     async validarUsuario(username: string, password: string): Promise<any> {
         // Verificamos si el usuario existe, a traves del correo
         const user = await this._usuariosService.obtenerUsuario(username);
@@ -26,6 +27,7 @@ export class AuthService {
         return null;
     }
 
+    //✔️  test unitario //
     async generateRefreshToken(userId):  Promise<string>{
         // Generando el token de actualización.
         var refreshToken = randomToken.generate(32); 
@@ -38,9 +40,14 @@ export class AuthService {
         return refreshToken
     }
 
+    //✔️  test unitario //
     async login(user: any) {
+        //console.log( user  );
+        let result;
         // extraemos los datos del usuario
-        const result = user._doc;
+        if(user._doc) {
+            result = user._doc;
+        }else{ result = user; }
         // sacamos de result los siguientes valores
         const { __v, _id, password, ...usuario } =  result;
         // renombramos el id

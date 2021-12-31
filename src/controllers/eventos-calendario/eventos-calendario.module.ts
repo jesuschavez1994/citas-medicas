@@ -1,7 +1,7 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EventoCalendario, EventoCalendarioSchema } from 'src/core/schemas/evento-calendario.schema';
-import { EventosCalendarioService } from 'src/core/services/eventos-calendario/eventos-calendario.service';
+import { EventoCalendario, EventoCalendarioSchema } from '../../core/schemas/evento-calendario.schema';
+import { EventosCalendarioService } from '../../core/services/eventos-calendario/eventos-calendario.service';
 import { EventosCalendarioController } from './eventos-calendario.controller';
 
 @Module({

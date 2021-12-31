@@ -11,3 +11,13 @@ export interface UsuarioInterface extends Document{
     __v: number;
     _id: string;
 }
+
+export interface Usuario {
+    google: boolean;
+    estado: boolean;
+    correo: string;
+    nombre: string;
+    password: string;
+    refreshtoken?: string
+    refreshtokenexpires?: Date
+}

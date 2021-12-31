@@ -7,7 +7,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { Model } from 'mongoose';
-import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
+import { Usuario, UsuarioDocument } from '../core/schemas/usuario.schema';
 import { Injectable } from '@nestjs/common';
 
 

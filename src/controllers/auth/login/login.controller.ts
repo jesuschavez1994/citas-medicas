@@ -1,10 +1,10 @@
 import { Controller, Request, Post, UseGuards, Res, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-import { AuthService } from 'src/core/services/auth/auth.service';
-import { LocalAuthGuard } from 'src/core/services/auth/local-auth.guard';
-import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
-import { verificacionGoogle } from 'src/helper/verificacion-google';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { LocalAuthGuard } from '../../../core/services/auth/local-auth.guard';
+import { UsuariosService } from '../../../core/services/usuarios/usuarios.service';
+import { verificacionGoogle } from '../../../helper/verificacion-google';
 
 @Controller('api/auth')
 export class LoginController {

@@ -7,7 +7,7 @@ import {
     MinLength,
     IsMongoId,
     IsOptional} from 'class-validator';
-import { IsUserAlreadyExist } from 'src/helper/verificacion-correo';
+import { IsUserAlreadyExist } from '../../helper/verificacion-correo';
 
 export class CrearUsuarioDTO{
     @IsNotEmpty({message: 'El nombre es obligatorio'})

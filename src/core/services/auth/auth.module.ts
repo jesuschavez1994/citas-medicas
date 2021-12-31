@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
-import { UsuariosModule } from 'src/controllers/usuarios/usuarios.module';
+import { UsuariosModule } from '../../../controllers/usuarios/usuarios.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtRefreshTokenStrategy } from './jwt.refreshtoken.strategy';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
     imports: [
@@ -21,7 +22,7 @@ import { JwtRefreshTokenStrategy } from './jwt.refreshtoken.strategy';
         AuthService,
         LocalStrategy,
         JwtStrategy,
-        JwtRefreshTokenStrategy
+        JwtRefreshTokenStrategy,
     ],
     exports: [AuthService],
 })

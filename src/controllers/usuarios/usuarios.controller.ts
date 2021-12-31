@@ -1,26 +1,22 @@
 import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { ActualizarUsuarioDTO, BorrarUsuarioDTO, CrearUsuarioDTO } from 'src/core/dto/usuario.dto';
-import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
 import * as bcrypt from 'bcrypt';
-import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
+import { ActualizarUsuarioDTO, BorrarUsuarioDTO, CrearUsuarioDTO } from '../../core/dto/usuario.dto';
+import { UsuariosService } from '../../core/services/usuarios/usuarios.service';
+import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
+import { PaginacionDTO } from '../../core/dto/paginacion.dto';
 
 
 @Controller('api/usuarios')
 export class UsuariosController {
 
-    constructor(
-    @InjectModel(Usuario.name) private readonly usuario: Model<UsuarioDocument>,
-    private readonly _usuarioService: UsuariosService) {}
+    constructor(private readonly _usuarioService: UsuariosService) {}
 
     @Get()
-    async obtenerUsuarios(@Res() res: Response, @Query('limite') limite: number = 5, @Query('desde') desde: number = 0) {
+    async obtenerUsuarios(@Res() res: Response, @Query() paginacion: PaginacionDTO) {
         try {
             const usuarios = await this._usuarioService
-            .obtenerUsuarios( Number(desde), Number(limite) );
+            .obtenerUsuarios( paginacion );
             return res.status(HttpStatus.OK).json({ usuarios });
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });

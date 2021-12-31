@@ -21,7 +21,6 @@ export class crearEventoDTO{
     @IsDate()
     @Type(() => Date)
     readonly fechaFinal: Date;
-    usuario: string;
 }
 
 export class actualizarEventoDTO{

@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { actualizarEventoDTO, crearEventoDTO } from 'src/core/dto/evento-calendario.dto';
-import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
-import { EventosCalendarioService } from 'src/core/services/eventos-calendario/eventos-calendario.service';
+import { actualizarEventoDTO, crearEventoDTO } from '../../core/dto/evento-calendario.dto';
+import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
+import { EventosCalendarioService } from '../../core/services/eventos-calendario/eventos-calendario.service';
 
 @Controller('api/eventos-calendario')
 export class EventosCalendarioController {

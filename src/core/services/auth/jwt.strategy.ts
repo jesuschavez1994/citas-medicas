@@ -14,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       //  si el valor es falso, entonces 'JwtStrategy' verificará la fecha de vencimiento 
       ignoreExpiration: false,  
       // secreto para validar el token
-      secretOrKey: process.env.SECRET_JWT, 
+      secretOrKey: jwtConstants.secret, 
       passReqToCallback: true,
     });
   }
