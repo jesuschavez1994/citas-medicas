@@ -52,7 +52,9 @@ export class AuthService {
         // generamos el token con la informacion del usuario
         return {
             token: this.jwtService.sign(payload),
-            refreshToken: await this.generateRefreshToken(id)
+            refreshToken: await this.generateRefreshToken(id),
+            nombre: usuario.nombre,
+            uid: usuario.id,
         };
     }
 }
