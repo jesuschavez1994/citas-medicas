@@ -4,6 +4,9 @@ import { EventosCalendarioService } from './eventos-calendario.service';
 import { EventoCalendarioInterface } from '../../../core/interfaces/evento-calendario.interface';
 import { Model } from 'mongoose';
 import { CollaboratorMock, SchemaMock } from '../test/mock/schema.mock';
+import { QueryMock } from '../test/mock/query.mock';
+
+const calls = ['limit', 'skip', 'sort', 'select', 'exec'];
 
 const mockResult = {
   "usuario": "61cb3641dad84d8884bef840",
@@ -23,14 +26,23 @@ const evento = {
 }
 
 const actualizarEvento ={
-  "titulo": "consulta suspendida",
-  "descripcion": "Consulta suspendida",
-  "fechaInicio": 1,
-  "fechaFinal": 2
+  titulo: "consulta suspendida",
+  descripcion: "Consulta suspendida",
+  fechaInicio: new Date(),
+	fechaFinal: new Date(),
+}
+
+const EventoEliminado = {
+  _id:  "61bf7a329f52f83c2adbc975",
+  fechaFinal: '1970-01-01T00:00:00.002Z',
+  fechaInicio: '1970-01-01T00:00:00.001Z',
+  descripcion: 'Consulta suspendida',
+  titulo: 'consulta suspendida',
+  usuario: "61b7b3888a91471c9d6a6ad9",
+  __v: 0
 }
 
 const idEvento = "61bf7a329f52f83c2adbc975"
-
 const idUsuario = "61cb3641dad84d8884bef840"
 
 describe('EventosCalendarioService', () => {
@@ -67,7 +79,8 @@ describe('EventosCalendarioService', () => {
           useValue: {   
             create: jest.fn(),
             findByIdAndUpdate: jest.fn(),
-            populate: jest.fn(),
+            findById: jest.fn().mockImplementation(() => EventoEliminado),
+            findByIdAndDelete: jest.fn(),
           }
         }
       ],
@@ -85,13 +98,29 @@ describe('EventosCalendarioService', () => {
     expect( resp ).toEqual(mockResult);
   });
 
-  // it('Debe de actualizar el evento del calendario', async() =>{
-  //   model.find = SchemaMock.asBuilderCall(
-  //     jest
-  //     .fn()
-  //     .mockResolvedValueOnce([CollaboratorMock.mockResultUpdate]),
-  //   );
-  //   const resp = await service.actualizarEvento(actualizarEvento, idEvento);
-  // })
+  it('Debe de eliminar un evento', async() =>{
+    const spyOn = jest.spyOn(model, 'findByIdAndDelete').mockImplementationOnce(() =>Promise.resolve(EventoEliminado) as any,);
+    const resp = await service.eliminarEvento(idEvento);
+    expect(resp).toEqual(EventoEliminado);
+    expect(spyOn).toHaveBeenCalledWith(idEvento);
+  });
+
+  it('Debe de retornar false si el evento a eliminar  no existe', async() =>{
+    const spyOn = jest.spyOn(model, 'findByIdAndDelete').mockImplementationOnce(() =>Promise.resolve(false) as any);
+    const resp = await service.eliminarEvento(idEvento);
+    expect(resp).toEqual(false);
+    expect(spyOn).toHaveBeenCalledWith(idEvento);
+  })
+
+  it('Debe de actualizar el evento del calendario', async() =>{
+    const calls = ['populate', 'exec'];
+    model.findByIdAndUpdate = SchemaMock.asBuilderCall(calls,
+      jest
+      .fn()
+      .mockResolvedValueOnce([CollaboratorMock.mockResultUpdate]),
+    );
+    const resp = await service.actualizarEvento(idEvento, QueryMock.asMongoQueryModel) as any;
+    expect(resp[0]).toEqual(CollaboratorMock.mockResultUpdate);
+  });
 
 });

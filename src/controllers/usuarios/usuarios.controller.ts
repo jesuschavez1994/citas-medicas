@@ -5,7 +5,7 @@ import { ActualizarUsuarioDTO, BorrarUsuarioDTO, CrearUsuarioDTO } from '../../c
 import { UsuariosService } from '../../core/services/usuarios/usuarios.service';
 import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
 import { PaginacionDTO } from '../../core/dto/paginacion.dto';
-
+import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 
 @Controller('api/usuarios')
 export class UsuariosController {
@@ -13,10 +13,10 @@ export class UsuariosController {
     constructor(private readonly _usuarioService: UsuariosService) {}
 
     @Get()
-    async obtenerUsuarios(@Res() res: Response, @Query() paginacion: PaginacionDTO) {
+    async obtenerUsuarios(@Res() res: Response, @MongoQuery() query: MongoQueryModel) {
         try {
             const usuarios = await this._usuarioService
-            .obtenerUsuarios( paginacion );
+            .obtenerUsuarios( query );
             return res.status(HttpStatus.OK).json({ usuarios });
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -25,12 +25,13 @@ export class UsuariosController {
 
     @Post('obtener-usuario')
     async obtenerUsuario(@Res() res: Response, @Body() body: any){
-        try {
+        //try {
             const usuario = await this._usuarioService.obtenerUsuario(body.correo);
             return res.status(HttpStatus.OK).json({ usuario });
-        }catch (error) {
-            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-        }
+        //}
+        // catch (error) {
+        //     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+        // }
     }
     
     @Post('crear-usuario')

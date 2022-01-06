@@ -5,14 +5,21 @@ import { ActualizarUsuarioDTO, CrearUsuarioDTO } from '../../../core/dto/usuario
 import { UsuarioInterface } from '../../../core/interfaces/usuario.interface';
 import { Usuario } from '../../../core/schemas/usuario.schema';
 import { PaginacionDTO } from '../../../core/dto/paginacion.dto';
+import { MongoQueryModel } from 'nest-mongo-query-parser';
 
 @Injectable()
 export class UsuariosService {
 
     constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioInterface> ) {}
     //✔️  test unitario //
-    async obtenerUsuarios( { desde = 1, limite = 5 }: PaginacionDTO ): Promise<UsuarioInterface[]>{
-        return await this.usuario.find({ estado: true }).skip(desde).limit(limite).exec();
+    async obtenerUsuarios( query: MongoQueryModel ): Promise<UsuarioInterface[]>{
+        return await this.usuario
+        .find({ estado: true })
+        .limit(query.limit)
+        .skip(query.skip)
+        .sort(query.sort)
+        .select(query.select)
+        .exec();
     }
 
     async obtenerUsuario(correo: string): Promise<UsuarioInterface>{

@@ -18,9 +18,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if(user === false){
       throw new BadRequestException('Usuario no existe');
     }
-    if (!user) {
-      throw new UnauthorizedException('Credenciales incorrectas');
-    }
+    // if (!user) {
+    //   throw new UnauthorizedException('Credenciales incorrectas');
+    // }
     return user;
   }
 }

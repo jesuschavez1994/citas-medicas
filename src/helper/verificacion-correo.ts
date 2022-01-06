@@ -16,6 +16,7 @@ import { Injectable } from '@nestjs/common';
 export class UserAlreadyExistsContraint implements ValidatorConstraintInterface {
   constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioDocument>) {}
   validate(correo: string, args: ValidationArguments) {
+    console.log(args)
     return this.usuario.findOne({correo}).then(user => {
       if (user) return false;
       return true;

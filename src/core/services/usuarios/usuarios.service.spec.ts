@@ -6,6 +6,7 @@ import { QueryMock } from '../test/mock/query.mock';
 import { CollaboratorMock, SchemaMock } from '../test/mock/schema.mock';
 import { UsuariosService } from './usuarios.service';
 
+const calls = ['limit', 'skip', 'sort', 'select', 'exec'];
 
 const mockUsuario = {
   "nombre": "test",
@@ -79,6 +80,7 @@ describe('UsuariosService', () => {
           findOne: jest.fn().mockImplementation(() => mockResult),
           findByIdAndUpdate: jest.fn().mockImplementation(() => mockResultUpdate),
           find: jest.fn().mockImplementation(() => [mockResult]),
+          exec: jest.fn()
         }
       }],
     }).compile();
@@ -138,9 +140,10 @@ describe('UsuariosService', () => {
 
   it('Debe de obtener un array de usuarios', async() =>{
     model.find = SchemaMock.asBuilderCall(
+      calls,
       jest
-      .fn()
-      .mockResolvedValueOnce([CollaboratorMock.asDocumentResponse]),
+        .fn()
+        .mockResolvedValueOnce([CollaboratorMock.asDocumentResponse]),
     );
     const resp = await service.obtenerUsuarios(QueryMock.asMongoQueryModel) as any;
     expect(resp).toBeDefined();
