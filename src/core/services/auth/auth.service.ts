@@ -39,8 +39,13 @@ export class AuthService {
     }
 
     async login(user: any) {
+        let  result;
         // extraemos los datos del usuario
-        const result = user._doc;
+        if(user._doc){
+            result = user._doc;
+        }else{
+            result = user;
+        }
         // sacamos de result los siguientes valores
         const { __v, _id, password, ...usuario } =  result;
         // renombramos el id

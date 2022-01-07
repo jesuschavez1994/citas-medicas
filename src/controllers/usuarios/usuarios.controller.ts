@@ -7,6 +7,7 @@ import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
+import { AuthService } from 'src/core/services/auth/auth.service';
 
 
 @Controller('api/usuarios')
@@ -14,7 +15,9 @@ export class UsuariosController {
 
     constructor(
     @InjectModel(Usuario.name) private readonly usuario: Model<UsuarioDocument>,
-    private readonly _usuarioService: UsuariosService) {}
+    private readonly _usuarioService: UsuariosService,
+    private _authService: AuthService
+    ) {}
 
     @Get()
     async obtenerUsuarios(@Res() res: Response, @Query('limite') limite: number = 5, @Query('desde') desde: number = 0) {
@@ -46,10 +49,14 @@ export class UsuariosController {
             body.password = await bcrypt.hash(body.password, salt);
             // Extraemos el password para no mostrarlo como respuesta
             const usuario = await this._usuarioService.crearNuevoUsuario(body);
-            // resgresamos el usuario creado
+            // Extraemos las credenciales del usuario
+            const credenciales = await this._authService.login(usuario);
+            const { token, refreshToken } = credenciales	
             return res.status(HttpStatus.OK).json({
                 message: 'Usuario creado',
-                usuario
+                usuario,
+                token, 
+                refreshToken
             })
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });

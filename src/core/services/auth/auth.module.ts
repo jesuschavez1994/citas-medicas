@@ -7,11 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtRefreshTokenStrategy } from './jwt.refreshtoken.strategy';
+import { UsuarioServiceModule } from '../usuarios/usuario-service.module';
 
 @Module({
     imports: [
-        UsuariosModule,
+        UsuarioServiceModule,
         PassportModule,
+        UsuarioServiceModule,
         JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '3600s' },

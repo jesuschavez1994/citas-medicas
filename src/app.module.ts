@@ -7,6 +7,7 @@ import { AuthModule } from './core/services/auth/auth.module';
 import { LoginController } from './controllers/auth/login/login.controller';
 import { ConfigModule } from '@nestjs/config';
 import { EventosCalendarioModule } from './controllers/eventos-calendario/eventos-calendario.module';
+import { UsuarioServiceModule } from './core/services/usuarios/usuario-service.module';
 
 
 @Module({
@@ -15,6 +16,7 @@ import { EventosCalendarioModule } from './controllers/eventos-calendario/evento
     MongooseModule.forRoot(process.env.MONGO_URI),
     UsuariosModule,
     AuthModule,
+    UsuarioServiceModule,
     EventosCalendarioModule,
   ],
   controllers: [AppController, LoginController],
