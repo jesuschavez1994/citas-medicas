@@ -31,3 +31,5 @@ import { join } from 'path';
     exports: [MailService]
 })
 export class MailServiceModule {}
+
+// Documentacion: https://notiz.dev/blog/send-emails-with-nestjs

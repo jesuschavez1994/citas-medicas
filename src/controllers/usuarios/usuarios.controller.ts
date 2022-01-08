@@ -9,7 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { MailService } from 'src/core/services/mail/mail.service';
-
+import { join } from 'path';
 
 @Controller('api/usuarios')
 export class UsuariosController {
@@ -54,9 +54,9 @@ export class UsuariosController {
             // Obtenemos las credenciales
             const credenciales = await this._authService.login(usuario);
             // Extraemos las credenciales del usuario
-            const { token, refreshToken } = credenciales
+            const { token, refreshToken } = credenciales;
             // Enviamos un correo de Bienvenida al usuario
-            await this._mailService.sendUserConfirmation(usuario)
+            await this._mailService.sendUserConfirmation(usuario);
             // retornamos la respuesta
             return res.status(HttpStatus.OK).json({
                 message: 'Usuario creado',
