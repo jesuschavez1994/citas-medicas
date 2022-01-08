@@ -8,6 +8,9 @@ import { LoginController } from './controllers/auth/login/login.controller';
 import { ConfigModule } from '@nestjs/config';
 import { EventosCalendarioModule } from './controllers/eventos-calendario/eventos-calendario.module';
 import { UsuarioServiceModule } from './core/services/usuarios/usuario-service.module';
+import { MailService } from './core/services/mail/mail.service';
+import { MailController } from './controllers/mail/mail.controller';
+import { MailServiceModule } from './core/services/mail/mail-service.module';
 
 
 @Module({
@@ -16,10 +19,12 @@ import { UsuarioServiceModule } from './core/services/usuarios/usuario-service.m
     MongooseModule.forRoot(process.env.MONGO_URI),
     UsuariosModule,
     AuthModule,
+    MailServiceModule,
     UsuarioServiceModule,
     EventosCalendarioModule,
+    MailServiceModule,
   ],
-  controllers: [AppController, LoginController],
-  providers: [AppService],
+  controllers: [AppController, LoginController, MailController],
+  providers: [AppService, MailService],
 })
 export class AppModule {}
