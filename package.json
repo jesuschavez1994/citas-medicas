@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "^1.6.1",
+    "@nestjs-modules/mailer": "^1.5.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.5",
     "@nestjs/core": "^8.0.0",
@@ -34,6 +34,7 @@
     "class-validator": "^0.13.2",
     "express-validator": "^6.13.0",
     "google-auth-library": "^7.10.3",
+    "handlebars": "^4.7.7",
     "joi": "^17.5.0",
     "mongoose": "^6.0.14",
     "nodemailer": "^6.7.2",
