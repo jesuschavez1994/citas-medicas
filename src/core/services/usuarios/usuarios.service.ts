@@ -14,8 +14,8 @@ export class UsuariosService {
         return await this.usuario.find({ estado: true }).skip(desde).limit(limite);
     }
 
-    async obtenerUsuario(correo: string): Promise<UsuarioInterface>{
-        return await this.usuario.findOne({ correo });
+    async obtenerUsuario(id: string): Promise<any>{
+        return await this.usuario.findById( id );
     }
 
     async crearNuevoUsuario(crearUsuarioDTO: CrearUsuarioDTO): Promise<UsuarioInterface>{
