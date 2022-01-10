@@ -4,13 +4,13 @@ import { actualizarEventoDTO, crearEventoDTO } from 'src/core/dto/evento-calenda
 import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
 import { EventosCalendarioService } from 'src/core/services/eventos-calendario/eventos-calendario.service';
 
-@Controller('api/eventos-calendario')
+@Controller('api/eventos')
 export class EventosCalendarioController {
 
     constructor(private readonly _eventoCalendarioService: EventosCalendarioService) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post('crear-evento')
+    @Post()
     async crearEventoCalendario(@Res() res: Response, @Body() body: crearEventoDTO, @Req() req: any) {
         try {
             const { id: idUsuario } = req;
@@ -25,7 +25,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('obtener-eventos')
+    @Get()
     async obtenerEventos(
         @Res() res: Response, 
         @Req() req: any, 
@@ -55,7 +55,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('actualizar-evento/:id')
+    @Put('/:id')
     async actualizarEvento(@Res() res: Response, @Body() body: actualizarEventoDTO, @Param('id') id: string) {
         try {
             const evento = await this._eventoCalendarioService.actualizarEvento(body, id);
@@ -68,7 +68,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete('eliminar-evento/:id')
+    @Delete('/:id')
     async eliminarEvento(@Res() res: Response, @Param('id') id: string){
         try {
             // verififcamos que el evento exista
