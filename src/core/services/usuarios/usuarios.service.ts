@@ -18,6 +18,10 @@ export class UsuariosService {
         return await this.usuario.findById( id );
     }
 
+    async obtenerUsuarioPorCorreo(correo: string): Promise<any>{
+        return await this.usuario.findOne( {correo} );
+    }
+
     async crearNuevoUsuario(crearUsuarioDTO: CrearUsuarioDTO): Promise<UsuarioInterface>{
         const nuevoUsuario = new this.usuario(crearUsuarioDTO);
         return await nuevoUsuario.save();

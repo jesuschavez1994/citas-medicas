@@ -15,7 +15,6 @@ export class LoginController {
     @Post('login')
     async login(@Request() req, @Res() res: Response) {
         try {
-            console.log(req.user)
             return  res.status(HttpStatus.OK).json(
                 await this._authService.login(req.user),
             )

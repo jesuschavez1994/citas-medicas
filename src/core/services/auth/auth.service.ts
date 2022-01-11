@@ -9,9 +9,9 @@ export class AuthService {
 
     constructor(private readonly _usuariosService: UsuariosService, private jwtService: JwtService) {}
 
-    async validarUsuario(username: string, password: string): Promise<any> {
+    async validarUsuario(correo: string, password: string): Promise<any> {
         // Verificamos si el usuario existe, a traves del correo
-        const user = await this._usuariosService.obtenerUsuario(username);
+        const user = await this._usuariosService.obtenerUsuarioPorCorreo(correo);
         if(!user) {
             return false;
         }
