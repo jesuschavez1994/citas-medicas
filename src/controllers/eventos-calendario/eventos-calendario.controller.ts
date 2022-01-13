@@ -14,9 +14,9 @@ export class EventosCalendarioController {
     async crearEventoCalendario(@Res() res: Response, @Body() body: crearEventoDTO, @Req() req: any) {
         try {
             const { id: idUsuario } = req;
-            const evento = await this._eventoCalendarioService.crearEventoCalendario(body, idUsuario);
-            return (evento) 
-            ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', evento }) 
+            const event = await this._eventoCalendarioService.crearEventoCalendario(body, idUsuario);
+            return (event) 
+            ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', event }) 
             : res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'No se pudo crear el evento' });
             
         }catch (error) {

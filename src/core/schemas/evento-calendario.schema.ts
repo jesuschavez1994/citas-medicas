@@ -10,29 +10,29 @@ export class EventoCalendario {
     type: String,
     required: true
   })
-  titulo: string;
+  title: string;
 
   @Prop({
     type: String,
     required: true,
   })
-  descripcion: string;
+  notes: string;
 
   @Prop({
     type: Date,
     required: true
   })
-  fechaInicio: Date;
+  start: Date;
 
   @Prop({
     type: Date,
     required: true
   })
-  fechaFinal: Date;
+  end: Date;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario',
+    ref: 'User',
     required: true
   })
   usuario: string;

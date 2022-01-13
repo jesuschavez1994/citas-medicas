@@ -6,10 +6,10 @@ export interface EventoCalendarioInterface extends Document {
 }
 
 export interface EventoInterface {
-  fechaFinal: string;
-  fechaInicio: string;
-  descripcion: string;
-  titulo: string;
+  end: string;
+  start: string;
+  notes: string;
+  titke: string;
   usuario: UsuarioInterface;
   id: string;
 }
