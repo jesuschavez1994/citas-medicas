@@ -47,13 +47,10 @@ describe('UsuariosController', () => {
 
   it('Debe de obtener un usuario de la DB', async() => {
     const result = jest.spyOn(UsuariosService.prototype as any, 'obtenerUsuario').mockImplementation(() => CollaboratorMock.mockUsuarioResult as any);
-    console.log(result);
     const response = {
       json: (body?: any) => {},
       status: (code: number) => HttpStatus.OK,
     } as any;
-
     const resp = await controller.obtenerUsuario(response, 'correo');
-    console.log(resp);
   })
 });

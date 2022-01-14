@@ -7,17 +7,17 @@ import { EventosCalendarioService } from '../../core/services/eventos-calendario
 import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 import { paginaActual, totalPaginas } from '../../helper/paginacion';
 
-@Controller('api/eventos-calendario')
+@Controller('api/eventos')
 export class EventosCalendarioController {
 
     constructor(private readonly _eventoCalendarioService: EventosCalendarioService) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post('crear-evento')
-    async crearEventoCalendario(@Res() res: Response, @Body() body: crearEventoDTO, @Req() req: any) {
+    @Post()
+    async crearEventoCalendario(@Res() res: Response, @Req() req: any, @MongoQuery() query: MongoQueryModel) {
         try {
             const { id: idUsuario } = req;
-            const evento = await this._eventoCalendarioService.crearEventoCalendario(body, idUsuario);
+            const evento = await this._eventoCalendarioService.crearEventoCalendario(query, idUsuario);
             return (evento) 
             ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', evento }) 
             : res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'No se pudo crear el evento' });
@@ -28,7 +28,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('obtener-eventos')
+    @Get()
     async obtenerEventos(
         @Res() res: Response, 
         @Req() req: any, 
@@ -40,14 +40,13 @@ export class EventosCalendarioController {
             // obtenemos los eventos creados por el usuario
             const [total, eventos] = await this._eventoCalendarioService.obtenerEventos(usuario, query);
             // retornamos la respuesta de los eventos
-            
             return (eventos.length > 0 ) 
             // si existen eventos los enviamos
             ? res.status(HttpStatus.OK).json({ 
                 eventos,
                 totalEventos: total,
-                totalPaginas: totalPaginas(total, query),
-                paginaActual: paginaActual(query),
+                totalPaginas: await totalPaginas(total, query),
+                paginaActual: await paginaActual(query),
             })
             // si no existen eventos creados, retornamos el siguiente mensaje
             : res.status(HttpStatus.OK).json({ eventos, mensaje: 'No hay eventos creados' });
@@ -58,7 +57,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('actualizar-evento/:id')
+    @Put('/:id')
     async actualizarEvento(
         @Res() res: Response, 
         @Param('id') id: string, 
@@ -75,7 +74,7 @@ export class EventosCalendarioController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete('eliminar-evento/:id')
+    @Delete('/:id')
     async eliminarEvento(@Res() res: Response, @Param('id') id: string){
         try {
             // verififcamos que el evento exista

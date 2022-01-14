@@ -15,8 +15,9 @@ export class EventosCalendarioService {
         select: 'nombre correo estado google',
     }
      //✔️  test unitario//
-    async crearEventoCalendario(evento: crearEventoDTO, idUsuario: string){
-        return await this.eventoCalendario.create({...evento, usuario: idUsuario});
+    async crearEventoCalendario(@MongoQuery() query: MongoQueryModel, idUsuario: string){
+        const eventos = query.filter
+        return await this.eventoCalendario.create({...eventos, usuario: idUsuario});
     }
 
     async obtenerEventos(usuario: string, @MongoQuery() query: MongoQueryModel): Promise<any> {
