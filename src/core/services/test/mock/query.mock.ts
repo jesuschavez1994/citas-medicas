@@ -2,10 +2,10 @@ export class QueryMock {
     static get asMongoQueryModel() {
       return {
         filter: {
-          titulo: 'Consulta supendida',
-          descripcion: 'consulta suspendida',
-          fechaInicio: 1,
-          fechaFinal: 2
+          title: 'Consulta supendida',
+          notes: 'consulta suspendida',
+          start: 1,
+          end: 2
         },
         select: {},
         sort: {},

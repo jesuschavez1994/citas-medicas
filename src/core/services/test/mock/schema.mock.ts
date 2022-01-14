@@ -69,10 +69,10 @@ export class CollaboratorMock {
   static get mockResultUpdate(){
     return {
       "evento": {
-        "fechaFinal": "1970-01-01T00:00:00.002Z",
-        "fechaInicio": "1970-01-01T00:00:00.001Z",
-        "descripcion": "Consulta suspendida",
-        "titulo": "consulta suspendida",
+        "end": "1970-01-01T00:00:00.002Z",
+        "start": "1970-01-01T00:00:00.001Z",
+        "notes": "Consulta suspendida",
+        "title": "consulta suspendida",
         "usuario": {
           "_id": "61b7b3888a91471c9d6a6ad9",
           "google": false,
@@ -96,10 +96,10 @@ export class CollaboratorMock {
             "correo": "jesus1@gamil.com",
             "nombre": "jesus1"
           },
-          "fechaFinal": "1970-01-01T00:00:00.002Z",
-          "fechaInicio": "1970-01-01T00:00:00.001Z",
-          "descripcion": "Consulta Jesus",
-          "titulo": "Consulta",
+          "end": "1970-01-01T00:00:00.002Z",
+          "start": "1970-01-01T00:00:00.001Z",
+          "notes": "Consulta Jesus",
+          "title": "Consulta",
           "id": "61d06b22e0f80e9488935dc8"
         },
         {
@@ -110,10 +110,10 @@ export class CollaboratorMock {
             "correo": "jesus1@gamil.com",
             "nombre": "jesus1"
           },
-          "fechaFinal": "1970-01-01T00:00:00.002Z",
-          "fechaInicio": "1970-01-01T00:00:00.001Z",
-          "descripcion": "Consulta Jesus",
-          "titulo": "Consulta",
+          "end": "1970-01-01T00:00:00.002Z",
+          "start": "1970-01-01T00:00:00.001Z",
+          "notes": "Consulta Jesus",
+          "title": "Consulta",
           "id": "61d06b23e0f80e9488935dca"
         }
       ],

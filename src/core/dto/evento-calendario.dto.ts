@@ -7,35 +7,35 @@ import {
 } from 'class-validator';
 
 export class crearEventoDTO{
-    @IsNotEmpty({message: 'El titulo es obligatorio'})
-    @IsString({ message: 'El titulo del evento debe de ser una cadena de texto' })
-    readonly titulo: string;
-    @IsNotEmpty({message: 'Las descripcion es obligatoria'})
-    @IsString({ message: 'La descripcion del evento debe de ser una cadena de texto' })
-    readonly descripcion: string;
+    @IsNotEmpty({message: 'El title es obligatorio'})
+    @IsString({ message: 'El title del evento debe de ser una cadena de texto' })
+    readonly title: string;
+    @IsNotEmpty({message: 'Las notes es obligatoria'})
+    @IsString({ message: 'La notes del evento debe de ser una cadena de texto' })
+    readonly notes: string;
     @IsNotEmpty({message: 'La fecha de inicio es obligatorio'})
     @IsDate()
     @Type(() => Date)
-    readonly fechaInicio: Date;
+    readonly start: Date;
     @IsNotEmpty({message: 'La fecha final es obligatorio'})
     @IsDate()
     @Type(() => Date)
-    readonly fechaFinal: Date;
+    readonly end: Date;
 }
 
 export class actualizarEventoDTO{
     @IsOptional()
-    @IsString({ message: 'El titulo del evento debe de ser una cadena de texto' })
-    readonly titulo: string;
+    @IsString({ message: 'El title del evento debe de ser una cadena de texto' })
+    readonly title: string;
     @IsOptional()
-    @IsString({ message: 'La descripcion del evento debe de ser una cadena de texto' })
-    readonly descripcion: string;
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    readonly fechaInicio: Date;
+    @IsString({ message: 'La notes del evento debe de ser una cadena de texto' })
+    readonly notes: string;
     @IsOptional()
     @IsDate()
     @Type(() => Date)
-    readonly fechaFinal: Date;
+    readonly start: Date;
+    @IsOptional()
+    @IsDate()
+    @Type(() => Date)
+    readonly end: Date;
 }
