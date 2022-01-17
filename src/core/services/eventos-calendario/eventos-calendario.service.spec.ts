@@ -119,7 +119,7 @@ describe('EventosCalendarioService', () => {
       .fn()
       .mockResolvedValueOnce([CollaboratorMock.mockResultUpdate]),
     );
-    const resp = await service.actualizarEvento(idEvento, QueryMock.asMongoQueryModel) as any;
+    const resp = await service.actualizarEvento(idEvento,{}, QueryMock.asMongoQueryModel) as any;
     expect(resp[0]).toEqual(CollaboratorMock.mockResultUpdate);
   });
 
