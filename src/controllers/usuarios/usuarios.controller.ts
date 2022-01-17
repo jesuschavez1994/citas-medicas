@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, UseGuards, Param } from '@nestjs/common';
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { ActualizarUsuarioDTO, BorrarUsuarioDTO, CrearUsuarioDTO } from '../../core/dto/usuario.dto';
@@ -6,35 +6,39 @@ import { UsuariosService } from '../../core/services/usuarios/usuarios.service';
 import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
 import { PaginacionDTO } from '../../core/dto/paginacion.dto';
 import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
+import { AuthService } from 'src/core/services/auth/auth.service';
 
-@Controller('api/usuarios')
+@Controller('api/users')
 export class UsuariosController {
 
-    constructor(private readonly _usuarioService: UsuariosService) {}
+    constructor(
+        private readonly _usuarioService: UsuariosService,
+        private _authService: AuthService,
+        ) {}
 
     @Get()
     async obtenerUsuarios(@Res() res: Response, @MongoQuery() query: MongoQueryModel) {
         try {
-            const usuarios = await this._usuarioService
+            const users = await this._usuarioService
             .obtenerUsuarios( query );
-            return res.status(HttpStatus.OK).json({ usuarios });
+            return res.status(HttpStatus.OK).json({ users });
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
         }
     }
 
-    @Post('obtener-usuario')
-    async obtenerUsuario(@Res() res: Response, @Body() body: any){
-        //try {
-            const usuario = await this._usuarioService.obtenerUsuario(body.correo);
-            return res.status(HttpStatus.OK).json({ usuario });
-        //}
-        // catch (error) {
-        //     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-        // }
+    @Get('/:id')
+    async obtenerUsuario(@Res() res: Response, @Param('id') id: string){
+        try {
+            const user = await this._usuarioService.obtenerUsuario(id);
+            return res.status(HttpStatus.OK).json({ user });
+        }
+        catch (error) {
+             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+        }
     }
     
-    @Post('crear-usuario')
+    @Post()
     async crearUsuario(@Res() res: Response, @Body() body: CrearUsuarioDTO ) {
         try {
             // Numeros de vueltas por defecto 10
@@ -42,11 +46,17 @@ export class UsuariosController {
             // Encriptar en una sola via
             body.password = await bcrypt.hash(body.password, salt);
             // Extraemos el password para no mostrarlo como respuesta
-            const usuario = await this._usuarioService.crearNuevoUsuario(body);
-            // resgresamos el usuario creado
+            const user = await this._usuarioService.crearNuevoUsuario(body);
+            // Obtenemos las credenciales
+            const credenciales = await this._authService.login(user);
+            // Extraemos las credenciales del usuario
+            const { token, refreshToken } = credenciales;
+            // resgresamos el user creado
             return res.status(HttpStatus.OK).json({
                 message: 'Usuario creado',
-                usuario
+                user,
+                token, 
+                refreshToken
             })
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -54,8 +64,8 @@ export class UsuariosController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('actualizar-usuario')
-    async actualizarusuario(@Res() res: Response, @Body() body: ActualizarUsuarioDTO ){
+    @Put('/:id')
+    async actualizarusuario(@Res() res: Response, @Body() body: ActualizarUsuarioDTO, @Param('id') id: string ){
         try {
             // Si el password existe lo actualizamos
             if( body.password ){
@@ -63,11 +73,11 @@ export class UsuariosController {
                 body.password = await bcrypt.hash(body.password, salt);
             }
             // Hacemos la peticion al servicio
-            const usuaioAcualizado = await this._usuarioService.actualizarUsuario(body.id, body);
-            // resgresamos el usuario actualizado
-            const { estado } = usuaioAcualizado
-            // Verificamos que el usuario que quiere actualizar se encuentra en estado true
-            return ( estado ) 
+            const usuaioAcualizado = await this._usuarioService.actualizarUsuario(id, body);
+            // resgresamos el user actualizado
+            const { status } = usuaioAcualizado
+            // Verificamos que el user que quiere actualizar se encuentra en status true
+            return ( status ) 
             ? res.status(HttpStatus.OK).json({message: 'Usuario Actualizado', usuaioAcualizado})
             : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Usuario no encontrado' })  
         }catch (error) {
@@ -76,15 +86,15 @@ export class UsuariosController {
     }
     
     @UseGuards(JwtAuthGuard)
-    @Delete('borrar-usuario')
-    async borrarUsuario(@Res() res: Response, @Body() body: BorrarUsuarioDTO) {
+    @Delete('/:id')
+    async borrarUsuario(@Res() res: Response, @Body() body: BorrarUsuarioDTO,  @Param('id') id: string) {
         try {
             // Esperamos que el servicio responda
-            const usarioBorrado = await this._usuarioService.borrarUsuario(body.id);
-            //extraemos el estado del usuario
-            const { estado } = usarioBorrado
-            // si el usuario es estado true borramos el usuario
-            return ( estado ) 
+            const usarioBorrado = await this._usuarioService.borrarUsuario(id);
+            //extraemos el status del usuario
+            const { status } = usarioBorrado
+            // si el usuario es status true borramos el usuario
+            return ( status ) 
             ? res.status(HttpStatus.OK).json({message: 'Usuario Borrado', usarioBorrado}) 
             : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Usuario no encontrado' })
         }catch (error) {

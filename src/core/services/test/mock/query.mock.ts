@@ -2,10 +2,10 @@ export class QueryMock {
     static get asMongoQueryModel() {
       return {
         filter: {
-          titulo: 'Consulta supendida',
-          descripcion: 'consulta suspendida',
-          fechaInicio: 1,
-          fechaFinal: 2
+          title: 'Consulta supendida',
+          description: 'consulta suspendida',
+          start: 1,
+          end: 2
         },
         select: {},
         sort: {},
@@ -13,7 +13,7 @@ export class QueryMock {
         skip: 0,
         populate: {
           path: 'usuario',
-          select: { 'nombre': 1, 'correo': 1, 'estado': 1, 'google': 1 }
+          select: { 'name': 1, 'email': 1, 'status': 1, 'google': 1 }
         },
       };
     }
@@ -28,8 +28,8 @@ export class QueryMock {
 //       limit: 2,
 //       skip: 0,
 //       populate: {
-//         path: 'usuario',
-//         select: { 'nombre': 1, 'correo': 1, 'estado': 1, 'google': 1 }
+//         path: 'user',
+//         select: { 'name': 1, 'email': 1, 'status': 1, 'google': 1 }
 //       },
 //     };
 //   }

@@ -8,8 +8,8 @@ export const verificacionGoogle = async (token = '') =>{
     });
     const {name, picture, email} = ticket.getPayload();
     return {
-        nombre: name, 
+        name: name, 
         avatar: picture, 
-        correo: email
+        email: email
     };
 }

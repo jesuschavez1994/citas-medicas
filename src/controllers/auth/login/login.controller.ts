@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Res, HttpStatus, Get } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { AuthService } from '../../../core/services/auth/auth.service';
@@ -11,34 +11,45 @@ export class LoginController {
 
     constructor(private _authService: AuthService, private readonly _usuariosService :UsuariosService) {}
 
-    @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req, @Res() res: Response) {
         try {
-            return  res.status(HttpStatus.OK).json(
-                await this._authService.login(req.user),
-            )
+            const user = await this._authService.validarUsuario(req.body.email,req.body.password);
+            // Obtenemos las credenciales
+            const credenciales = await this._authService.login(user);
+
+            return  res.status(HttpStatus.OK).json({
+                message: 'Usuario creado',
+                ...credenciales
+            })
         } catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
                 error: error.message,
-                mensaje: 'Error al autenticar usuario'
+                message: 'Error al autenticar usuario'
             })  
         }
     }
 
     @UseGuards(AuthGuard('jwt-refreshtoken'))
-    @Post('refreshtoken')
+    @Get('refreshtoken')
     async refreshToken(@Request() req, @Res() res: Response){
+
+    const { id: idUser } = req;
+
       try {
-        return  res.status(HttpStatus.OK).json(
-            await this._authService.login(req.user),
-        )
+        const user = this._usuariosService.obtenerUsuario(idUser);
+        console.log('usuario',user)
+        // Obtenemos las credenciales
+        const credenciales = await this._authService.login(user);
+        return  res.status(HttpStatus.OK).json({
+            ...credenciales
+        })
       } catch (error) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             status: HttpStatus.INTERNAL_SERVER_ERROR,
             error: error.message,
-            mensaje: 'Error al autenticar usuario'
+            message: 'Error al autenticar usuario'
         }) 
       }
     }
@@ -50,33 +61,33 @@ export class LoginController {
 
         try{
             // verificamos el token y desestructuramos el usuario
-            const {nombre, avatar, correo} = await verificacionGoogle(id_token);
-            // verificamos si el usuario existe en la base de datos con el correo
-            const usuario = await this._usuariosService.obtenerUsuario(correo);
+            const {name, avatar, email} = await verificacionGoogle(id_token);
+            // verificamos si el usuario existe en la base de datos con el email
+            const user = await this._usuariosService.obtenerUsuario(email);
             // si el usuario no existe, creamos un nuevo usuario
-            if(!usuario){
+            if(!user){
                 // creamos el usuario
-                const data = { nombre, avatar, correo, password: ':p', google: true, estado: true };
+                const data = { name, avatar, email, password: ':p', google: true, status: true };
                 // guardamos el usuario
-                const usuario = await this._usuariosService.crearNuevoUsuario(data);
+                const user = await this._usuariosService.crearNuevoUsuario(data);
                 // creamos el token y retornamos la respuesta
                 return res.status(HttpStatus.OK).json({
-                    usuario,
-                    token: await this._authService.login(usuario)
+                    user,
+                    token: await this._authService.login(user)
                 })
             }
             // si el usuario existe, retornamos el token y el usuario para que se pueda loguear
-            if(usuario){
+            if(user){
                 return res.status(HttpStatus.OK).json({
-                    usuario,
-                    token: await this._authService.login(usuario)
+                    user,
+                    token: await this._authService.login(user)
                 })
             }
-            // si el usuario {estado: false}, retornamos un error
-            if(!usuario.estado){
+            // si el usuario {status: false}, retornamos un error
+            if(!user.status){
                 return res.status(HttpStatus.FORBIDDEN).json({
                     ok: false,
-                    mensaje: 'Usuario no habilitado'
+                    message: 'Usuario no habilitado'
                 })
             }
             return res.status(HttpStatus.OK).json({id_token})
@@ -85,7 +96,7 @@ export class LoginController {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
                 error: error.message,
-                mensaje: 'Error al autenticar usuario'
+                message: 'Error al autenticar usuario'
             })
         }
     }

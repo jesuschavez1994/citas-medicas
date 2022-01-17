@@ -11,17 +11,17 @@ import {UsuarioInterface, Usuario} from '../../interfaces/usuario.interface';
 import { jwtConstants } from './constants';
 
 const mockUsuario = {
-  "correo": "prueba9@gamil.com",
+  "email": "prueba9@gamil.com",
   "password": "12345678"
 }
 
 const mockResult = {
   _id: '61b7b3888a91471c9d6a6ad9',
   google: false,
-  estado: true,
+  status: true,
   password: '$2b$10$/cCPqfEO5IF3yb0AQ1Qz5.1QepQOgXgoaXybd7svvV4AIlSQnTogO',
-  correo: 'prueba9@gamil.com',
-  nombre: 'prueba9',
+  email: 'prueba9@gamil.com',
+  name: 'prueba9',
   __v: 0,
   refreshtoken: 'dvwPH5KY39QhNFpOfb8CReQBOKlpx2ez',
   refreshtokenexpires: 'Sun Dec 26 2021 05:23:17 GMT+0800 (hora estándar de China)'
@@ -82,12 +82,12 @@ describe('AuthService', () => {
   });
 
   
-  it('Validamos que el correo del usuario exista en la Base de Datos',  async () => {
+  it('Validamos que el email del usuario exista en la Base de Datos',  async () => {
     jest.spyOn(model, 'findOne').mockImplementation(() => {
       return Promise.resolve(mockResult) as any;
     });
-    const respuesta = await service.validarUsuario(mockUsuario.correo, mockUsuario.password);
-    expect(respuesta.correo).toBe(mockResult.correo);
+    const respuesta = await service.validarUsuario(mockUsuario.email, mockUsuario.password);
+    expect(respuesta.email).toBe(mockResult.email);
   });
 
   it('Devuelve false si el usuario no existe en la Base de Datos', async () => {

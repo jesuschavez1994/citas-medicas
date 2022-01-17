@@ -2,9 +2,9 @@ import { Document } from "mongoose";
 
 export interface UsuarioInterface extends Document{
     google: boolean;
-    estado: boolean;
-    correo: string;
-    nombre: string;
+    status: boolean;
+    email: string;
+    name: string;
     password: string;
     refreshtoken?: string
     refreshtokenexpires?: Date
@@ -14,9 +14,9 @@ export interface UsuarioInterface extends Document{
 
 export interface Usuario {
     google: boolean;
-    estado: boolean;
-    correo: string;
-    nombre: string;
+    status: boolean;
+    email: string;
+    name: string;
     password: string;
     refreshtoken?: string
     refreshtokenexpires?: Date

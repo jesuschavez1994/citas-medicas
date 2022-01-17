@@ -9,36 +9,36 @@ import { UsuariosService } from './usuarios.service';
 const calls = ['limit', 'skip', 'sort', 'select', 'exec'];
 
 const mockUsuario = {
-  "nombre": "test",
-  "correo": "test@gamil.com",
+  "name": "test",
+  "email": "test@gamil.com",
   "password": "12345678",
-  "estado": true,
+  "status": true,
   "google": false
 }
 
 const mockResult = {
   google: false,
-  estado: true,
+  status: true,
   password: '$2b$10$kiZtz2qtyLVKpJITXeySju7fkNEAJwPYbMcbrqH9SDSERLZf7zEO.',
-  correo: 'test@gamil.com',
-  nombre: 'test',
+  email: 'test@gamil.com',
+  name: 'test',
   _id:"61cb3641dad84d8884bef840"
 }
 // Mock Para actualizar un usuario
 const mockUsuarioUpdate ={
   "google": false,
-  "estado": true,
+  "status": true,
   "password": "87654321",
-  "nombre": "test_update",
-  "correo": "test_update@gmail.com",
+  "name": "test_update",
+  "email": "test_update@gmail.com",
   "id": "61cb4da115be8382db1d9328"
 }
 
 const mockResultUpdate = {
   "google": false,
-  "estado": false,
-  "correo": "test_update@gmail.com",
-  "nombre": "test_update",
+  "status": false,
+  "email": "test_update@gmail.com",
+  "name": "test_update",
   "refreshtoken": "8gD0kTL2MOfB6HHHEOiDoPqfGTV1rSrj",
   "refreshtokenexpires": "Tue Jan 04 2022 01:49:03 GMT+0800 (hora estándar de China)",
   "id": "61cb4da115be8382db1d9328"
@@ -97,7 +97,7 @@ describe('UsuariosService', () => {
   });
 
   it('Debe de obtener un usuario', async () =>{
-    const resp = await service.obtenerUsuario(mockUsuario.correo);
+    const resp = await service.obtenerUsuario(mockUsuario.email);
     expect(resp).toBeDefined();
     expect(resp).toEqual(mockResult);
   });
@@ -105,17 +105,17 @@ describe('UsuariosService', () => {
   it('Debe de actualizar un usuario', async () =>{ 
     const resp = await service.actualizarUsuario(mockUsuarioUpdate.id, mockUsuarioUpdate);
     expect(resp).toBeDefined();
-    // se verifica que el correo de la respuesta sea igual al correo del mock
-    expect(resp.correo).toEqual(mockUsuarioUpdate.correo);
+    // se verifica que el email de la respuesta sea igual al email del mock
+    expect(resp.email).toEqual(mockUsuarioUpdate.email);
   });
 
-  it('Debe de cambiar el estado de un usuario a false', async () =>{
+  it('Debe de cambiar el status de un usuario a false', async () =>{
     const resp = await service.borrarUsuario(mockUsuarioUpdate.id);
     expect(resp).toBeDefined();
-    expect(resp.estado).toEqual(false);
+    expect(resp.status).toEqual(false);
   });
 
-  it('Debe de mostrar un mensaje cuando el estado del usuario es falso', async () =>{
+  it('Debe de mostrar un mensaje cuando el status del usuario es falso', async () =>{
     const mockUsuarioDelete = {"id": "61cb4da115be8382db1d9328"}
     const mockResultDelete = {"message": "Usuario no encontrado"}
     jest.spyOn(model, 'findByIdAndUpdate').mockImplementationOnce(() =>Promise.resolve(mockResultDelete) as any,);
@@ -147,7 +147,7 @@ describe('UsuariosService', () => {
     );
     const resp = await service.obtenerUsuarios(QueryMock.asMongoQueryModel) as any;
     expect(resp).toBeDefined();
-    expect(resp[0].usuarios.length).toBe(2);
+    expect(resp[0].users.length).toBe(2);
   })
 
 });

@@ -8,10 +8,11 @@ import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtRefreshTokenStrategy } from './jwt.refreshtoken.strategy';
 import { JwtService } from '@nestjs/jwt';
+import { UsuarioServiceModule } from '../usuarios/usuario-service.module';
 
 @Module({
     imports: [
-        UsuariosModule,
+        UsuarioServiceModule,
         PassportModule,
         JwtModule.register({
             secret: jwtConstants.secret,

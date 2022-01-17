@@ -7,20 +7,21 @@ import { AuthService } from './auth.service';
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     super({
-      usernameField: 'correo',
+      usernameField: 'email',
       passwordField: 'password',
       //passReqToCallback: true,
     });
   }
 
-  async validate(correo: string, password: string): Promise<any> {
-    const user = await this.authService.validarUsuario(correo, password);
+  async validate(email: string, password: string): Promise<any> {
+    const user = await this.authService.validarUsuario(email, password);
+    console.log('correo',email)
     if(user === false){
       throw new BadRequestException('Usuario no existe');
     }
-    // if (!user) {
-    //   throw new UnauthorizedException('Credenciales incorrectas');
-    // }
+    if (!user) {
+      throw new UnauthorizedException('Credenciales incorrectas');
+    }
     return user;
   }
 }

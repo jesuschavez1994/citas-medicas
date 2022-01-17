@@ -7,7 +7,7 @@ import { EventosCalendarioService } from '../../core/services/eventos-calendario
 import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 import { paginaActual, totalPaginas } from '../../helper/paginacion';
 
-@Controller('api/eventos')
+@Controller('api/events')
 export class EventosCalendarioController {
 
     constructor(private readonly _eventoCalendarioService: EventosCalendarioService) {}
@@ -16,10 +16,10 @@ export class EventosCalendarioController {
     @Post()
     async crearEventoCalendario(@Res() res: Response, @Req() req: any, @MongoQuery() query: MongoQueryModel) {
         try {
-            const { id: idUsuario } = req;
-            const evento = await this._eventoCalendarioService.crearEventoCalendario(query, idUsuario);
-            return (evento) 
-            ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', evento }) 
+            const { id: idUser } = req;
+            const event = await this._eventoCalendarioService.crearEventoCalendario(req.body, idUser);
+            return (event) 
+            ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', event }) 
             : res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'No se pudo crear el evento' });
             
         }catch (error) {
@@ -33,23 +33,20 @@ export class EventosCalendarioController {
         @Res() res: Response, 
         @Req() req: any, 
         @MongoQuery() query: MongoQueryModel) {
-        // obtenemos el id del usuario del req
-        const { id: usuario } = req;
+        // obtenemos el id del user del req
+        const { id: uid } = req;
 
         try {
-            // obtenemos los eventos creados por el usuario
-            const [total, eventos] = await this._eventoCalendarioService.obtenerEventos(usuario, query);
+            // obtenemos los eventos creados por el user
+            const events = await this._eventoCalendarioService.obtenerEventos(uid, query);
             // retornamos la respuesta de los eventos
-            return (eventos.length > 0 ) 
+            return (events.length > 0 ) 
             // si existen eventos los enviamos
             ? res.status(HttpStatus.OK).json({ 
-                eventos,
-                totalEventos: total,
-                totalPaginas: await totalPaginas(total, query),
-                paginaActual: await paginaActual(query),
+                events
             })
-            // si no existen eventos creados, retornamos el siguiente mensaje
-            : res.status(HttpStatus.OK).json({ eventos, mensaje: 'No hay eventos creados' });
+            // si no existen eventos creados, retornamos el siguiente message
+            : res.status(HttpStatus.OK).json({ events, message: 'No hay eventos creados' });
             
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -61,12 +58,13 @@ export class EventosCalendarioController {
     async actualizarEvento(
         @Res() res: Response, 
         @Param('id') id: string, 
+        @Req() req: any,
         @MongoQuery() query: MongoQueryModel) {
 
         try {
-            const evento = await this._eventoCalendarioService.actualizarEvento(id, query);
-            return (evento) 
-            ?  res.status(HttpStatus.OK).json({  message: 'Evento actualizado', evento })
+            const event = await this._eventoCalendarioService.actualizarEvento(id,req.body, query);
+            return (event) 
+            ?  res.status(HttpStatus.OK).json({  message: 'Evento actualizado', event })
             : res.status(HttpStatus.BAD_REQUEST).json({ error: 'No se pudo actualizar el evento' });
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -80,8 +78,8 @@ export class EventosCalendarioController {
             // verififcamos que el evento exista
             const eventoEliminado = await this._eventoCalendarioService.eliminarEvento(id);
             return (eventoEliminado)
-            ? res.status(HttpStatus.OK).json({ mensaje: 'Evento Eliminado' })
-            : res.status(HttpStatus.BAD_REQUEST).json({ mensaje: 'Evento no existe' })
+            ? res.status(HttpStatus.OK).json({ message: 'Evento Eliminado' })
+            : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Evento no existe' })
             
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });

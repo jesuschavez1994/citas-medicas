@@ -11,47 +11,37 @@ export class EventosCalendarioService {
 
     constructor(@InjectModel(EventoCalendario.name) private readonly eventoCalendario: Model<EventoCalendarioDocument> ) {}
     elementosPopulate ={
-        path: 'usuario',
-        select: 'nombre correo estado google',
+        path: 'user',
+        select: 'name email status google',
     }
      //✔️  test unitario//
-    async crearEventoCalendario(@MongoQuery() query: MongoQueryModel, idUsuario: string){
-        const eventos = query.filter
-        return await this.eventoCalendario.create({...eventos, usuario: idUsuario});
+    async crearEventoCalendario(body:any, idUsuario: string){
+        const evento= await this.eventoCalendario.create({...body, user: idUsuario});;
+        return await evento.populate('user','name');
     }
 
-    async obtenerEventos(usuario: string, @MongoQuery() query: MongoQueryModel): Promise<any> {
-        
-        return await Promise.all([
-            // numero total de eventos en el calendario
-            this.eventoCalendario
-            .find({usuario})
-            .count({})
-            .exec(),
-            // listado de eventos paginados
-            this.eventoCalendario
-            .find({usuario})
-            .limit(query.limit)
-            .skip(query.skip)
-            .populate(query.populate)
-            .exec()
-        ]) 
+    async obtenerEventos(uid: string, @MongoQuery() query: MongoQueryModel): Promise<any> {
+        const events=await this.eventoCalendario.find({user:uid}).populate('user','name')
+        return  events;
     }
 
     //✔️  test unitario//
-    async actualizarEvento(id: string , @MongoQuery() query: MongoQueryModel){
+    async actualizarEvento(id: string ,body:any, @MongoQuery() query: MongoQueryModel){
+
+        const event= await this.eventoCalendario.findById(id)
+
         return await this.eventoCalendario
-        .findByIdAndUpdate(id, query.filter, {new: true})
-        .populate(query.populate)
+        .findByIdAndUpdate(event.id, body, {new: true})
+        .populate('user','name')
         .exec();
     }
 
      //✔️  test unitario//
     async eliminarEvento(id: string){
         // verificamos que existe el evento
-        const evento = await this.eventoCalendario.findById(id);
+        const event = await this.eventoCalendario.findById(id);
         // si existe, lo eliminamos
-        if(evento){
+        if(event){
             return await this.eventoCalendario.findByIdAndDelete(id);
         }else{
             return false

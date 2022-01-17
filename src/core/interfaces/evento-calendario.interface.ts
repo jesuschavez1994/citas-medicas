@@ -2,14 +2,14 @@ import { Document } from "mongoose";
 import { UsuarioInterface } from "./usuario.interface";
 
 export interface EventoCalendarioInterface extends Document {
-  eventos: EventoInterface[];
+  events: EventoInterface[];
 }
 
 export interface EventoInterface {
-  fechaFinal: string;
-  fechaInicio: string;
-  descripcion: string;
-  titulo: string;
-  usuario: UsuarioInterface;
+  end: string;
+  start: string;
+  description: string;
+  title: string;
+  user: UsuarioInterface;
   id: string;
 }

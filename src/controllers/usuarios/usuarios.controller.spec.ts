@@ -51,6 +51,6 @@ describe('UsuariosController', () => {
       json: (body?: any) => {},
       status: (code: number) => HttpStatus.OK,
     } as any;
-    const resp = await controller.obtenerUsuario(response, 'correo');
+    const resp = await controller.obtenerUsuario(response, 'email');
   })
 });

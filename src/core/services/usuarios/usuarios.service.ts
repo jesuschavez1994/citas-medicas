@@ -10,11 +10,11 @@ import { MongoQueryModel } from 'nest-mongo-query-parser';
 @Injectable()
 export class UsuariosService {
 
-    constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioInterface> ) {}
+    constructor(@InjectModel(Usuario.name) private user: Model<UsuarioInterface> ) {}
     //✔️  test unitario //
     async obtenerUsuarios( query: MongoQueryModel ): Promise<UsuarioInterface[]>{
-        return await this.usuario
-        .find({ estado: true })
+        return await this.user
+        .find({ status: true })
         .limit(query.limit)
         .skip(query.skip)
         .sort(query.sort)
@@ -22,29 +22,33 @@ export class UsuariosService {
         .exec();
     }
 
-    async obtenerUsuario(correo: string): Promise<UsuarioInterface>{
-        return await this.usuario.findOne({ correo });
+    async obtenerUsuario(id: string): Promise<any>{
+        return await this.user.findById( id );
+    }
+
+    async obtenerUsuarioPorCorreo(email: string): Promise<any>{
+        return await this.user.findOne( {email} );
     }
 
     //✔️  test unitario//
     async crearNuevoUsuario(crearUsuarioDTO: CrearUsuarioDTO): Promise<UsuarioInterface>{
-        return await this.usuario.create(crearUsuarioDTO);
+        return await this.user.create(crearUsuarioDTO);
     }
 
     //✔️  test unitario//
     async actualizarUsuario(idUsuario: string, actualizarUsuarioDTO: ActualizarUsuarioDTO): Promise<UsuarioInterface>{
-        const usarioActualizado = await this.usuario.findByIdAndUpdate(idUsuario, actualizarUsuarioDTO, {new: true});
+        const usarioActualizado = await this.user.findByIdAndUpdate(idUsuario, actualizarUsuarioDTO, {new: true});
         return usarioActualizado;
     }
 
     //✔️  test unitario//
     async borrarUsuario(idUsuario: string): Promise<UsuarioInterface>{
-        return await this.usuario.findByIdAndUpdate(idUsuario, { estado: false }, {new: true});
+        return await this.user.findByIdAndUpdate(idUsuario, { status: false }, {new: true});
     }
 
       //✔️  test unitario//
     async guardarTokenRefresh(idUsuario: string, refreshtoken: string, refreshtokenexpires: Date): Promise<UsuarioInterface>{
-        return await this.usuario.findByIdAndUpdate(idUsuario, { refreshtoken: refreshtoken, refreshtokenexpires } , {new: true});
+        return await this.user.findByIdAndUpdate(idUsuario, { refreshtoken: refreshtoken, refreshtokenexpires } , {new: true});
     }
 
 

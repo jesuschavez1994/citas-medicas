@@ -9,36 +9,36 @@ import { QueryMock } from '../test/mock/query.mock';
 const calls = ['limit', 'skip', 'sort', 'select', 'exec'];
 
 const mockResult = {
-  "usuario": "61cb3641dad84d8884bef840",
-  "fechaFinal": "1970-01-01T00:00:00.002Z",
-  "fechaInicio": "1970-01-01T00:00:00.001Z",
-  "descripcion": "Consulta Jesus",
-  "titulo": "Consulta",
+  "user": "61cb3641dad84d8884bef840",
+  "end": "1970-01-01T00:00:00.002Z",
+  "start": "1970-01-01T00:00:00.001Z",
+  "description": "Consulta Jesus",
+  "title": "Consulta",
   "id": "61cf63d31de541edc9c2b6bf"
 }
 
 
-const evento = {
-	titulo: "Consulta",
-	descripcion: "Consulta Jesus",
-	fechaInicio: new Date(),
-	fechaFinal: new Date(),
+const event = {
+	title: "Consulta",
+	description: "Consulta Jesus",
+	start: new Date(),
+	end: new Date(),
 }
 
 const actualizarEvento ={
-  titulo: "consulta suspendida",
-  descripcion: "Consulta suspendida",
-  fechaInicio: new Date(),
-	fechaFinal: new Date(),
+  title: "consulta suspendida",
+  description: "Consulta suspendida",
+  start: new Date(),
+	end: new Date(),
 }
 
 const EventoEliminado = {
   _id:  "61bf7a329f52f83c2adbc975",
-  fechaFinal: '1970-01-01T00:00:00.002Z',
-  fechaInicio: '1970-01-01T00:00:00.001Z',
-  descripcion: 'Consulta suspendida',
-  titulo: 'consulta suspendida',
-  usuario: "61b7b3888a91471c9d6a6ad9",
+  end: '1970-01-01T00:00:00.002Z',
+  start: '1970-01-01T00:00:00.001Z',
+  description: 'Consulta suspendida',
+  title: 'consulta suspendida',
+  user: "61b7b3888a91471c9d6a6ad9",
   __v: 0
 }
 
@@ -93,7 +93,7 @@ describe('EventosCalendarioService', () => {
 
   it('Debe de crear un evento en el calendario', async() => {
     jest.spyOn(model, 'create').mockImplementation(() => mockResult);
-    const resp = await service.crearEventoCalendario(evento, idUsuario);
+    const resp = await service.crearEventoCalendario(event, idUsuario);
     expect(service).toBeDefined();
     expect( resp ).toEqual(mockResult);
   });

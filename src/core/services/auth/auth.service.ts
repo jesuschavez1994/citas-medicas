@@ -10,20 +10,21 @@ export class AuthService {
     constructor(private readonly _usuariosService: UsuariosService, private jwtService: JwtService) {}
 
     //✔️  test unitario //
-    async validarUsuario(username: string, password: string): Promise<any> {
-        // Verificamos si el usuario existe, a traves del correo
-        const user = await this._usuariosService.obtenerUsuario(username);
+    async validarUsuario(email: string, password: string): Promise<any> {
+        // Verificamos si el usuario existe, a traves del email
+        const user = await this._usuariosService.obtenerUsuarioPorCorreo(email);
         if(!user) {
             return false;
         }
         // verificar la contraseña
         const validarPassword = bcrypt.compareSync( password, user.password );
         // validamos si existe el usuario y el password es correcto
-        if(user && validarPassword && user.estado) {
+        if(user && validarPassword && user.status) {
             // retornamos el usuario
             const { password, ...result} = user;
             return result;
         }
+        return null;
     }
 
     //✔️  test unitario //
@@ -48,17 +49,19 @@ export class AuthService {
             result = user._doc;
         }else{ result = user; }
         // sacamos de result los siguientes valores
-        const { __v, _id, password, ...usuario } =  result;
+        const { __v, _id, password, ..._user } =  result;
         // renombramos el id
-        usuario.id = _id;
-        // extraemos el correo y id de usuario
-       const {correo, id } = usuario;
+        _user.id = _id;
+        // extraemos el email y id de usuario
+       const {name,email, id } = _user;
        // construimos el payload
-        const payload = { username: correo, sub: id };
+        const payload = { username: email, sub: id };
         // generamos el token con la informacion del usuario
         return {
             token: this.jwtService.sign(payload),
-            refreshToken: await this.generateRefreshToken(id)
+            refreshToken: await this.generateRefreshToken(id),
+            name,
+            uid: id,
         };
     }
 }
