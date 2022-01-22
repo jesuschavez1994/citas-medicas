@@ -1,4 +1,4 @@
-import { paginaActual, totalPaginas } from "./paginacion";
+import { paginaActual, totalPaginas } from "../paginacion";
 
 describe('Prueba de paginacion', () => {
     it('Debe devolver la pagina actual', async () => {

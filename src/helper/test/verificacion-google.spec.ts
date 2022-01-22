@@ -1,8 +1,8 @@
 import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { OAuth2Client } from 'google-auth-library';
-import { CollaboratorMock } from '../core/services/test/mock/schema.mock';
-import {verificacionGoogle} from './verificacion-google';
+import { CollaboratorMock } from '../../core/test/mock/schema.mock';
+import {verificacionGoogle} from '../verificacion-google';
 const client = new OAuth2Client(process.env.ID_CLIENTE_GOOGLE);
 
 describe('Verificacion de Google', () => {

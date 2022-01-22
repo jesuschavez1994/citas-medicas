@@ -13,6 +13,7 @@ export class AuthService {
     async validarUsuario(email: string, password: string): Promise<any> {
         // Verificamos si el usuario existe, a traves del email
         const user = await this._usuariosService.obtenerUsuarioPorCorreo(email);
+        console.log(user)
         if(!user) {
             return false;
         }

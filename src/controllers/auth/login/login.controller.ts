@@ -39,7 +39,6 @@ export class LoginController {
 
       try {
         const user = this._usuariosService.obtenerUsuario(idUser);
-        console.log('usuario',user)
         // Obtenemos las credenciales
         const credenciales = await this._authService.login(user);
         return  res.status(HttpStatus.OK).json({

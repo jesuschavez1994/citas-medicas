@@ -7,7 +7,7 @@ import { UsuariosModule } from './usuarios.module';
 import { Response } from 'express';
 import { Model } from 'mongoose';
 import { UsuarioInterface } from '../../core/interfaces/usuario.interface';
-import { CollaboratorMock } from '../../core/services/test/mock/schema.mock';
+import { CollaboratorMock } from '../../core/test/mock/schema.mock';
 
 describe('UsuariosController', () => {
   let controller: UsuariosController;

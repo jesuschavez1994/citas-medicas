@@ -2,9 +2,9 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import { UsuarioInterface } from 'src/core/interfaces/usuario.interface';
-import { QueryMock } from '../test/mock/query.mock';
-import { CollaboratorMock, SchemaMock } from '../test/mock/schema.mock';
-import { UsuariosService } from './usuarios.service';
+import { QueryMock } from '../../mock/query.mock';
+import { CollaboratorMock, SchemaMock } from '../../mock/schema.mock';
+import { UsuariosService } from '../../../services/usuarios/usuarios.service';
 
 const calls = ['limit', 'skip', 'sort', 'select', 'exec'];
 

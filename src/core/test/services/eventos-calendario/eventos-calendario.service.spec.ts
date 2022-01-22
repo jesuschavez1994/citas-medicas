@@ -1,10 +1,10 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EventosCalendarioService } from './eventos-calendario.service';
-import { EventoCalendarioInterface } from '../../../core/interfaces/evento-calendario.interface';
+import { EventosCalendarioService } from '../../../services/eventos-calendario/eventos-calendario.service';
+import { EventoCalendarioInterface } from '../../../interfaces/evento-calendario.interface';
 import { Model } from 'mongoose';
-import { CollaboratorMock, SchemaMock } from '../test/mock/schema.mock';
-import { QueryMock } from '../test/mock/query.mock';
+import { CollaboratorMock, SchemaMock } from '../../mock/schema.mock';
+import { QueryMock } from '../../mock/query.mock';
 
 const calls = ['limit', 'skip', 'sort', 'select', 'exec'];
 

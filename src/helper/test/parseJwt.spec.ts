@@ -1,4 +1,4 @@
-import { parseJwt } from "./parseJwt";
+import { parseJwt } from "../parseJwt";
 
 describe('parseJwt', () => {
     it('Debe devolver el token', async () => {

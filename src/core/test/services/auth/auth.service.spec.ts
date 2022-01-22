@@ -3,12 +3,12 @@ import { getModelToken } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { Model } from 'mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
-import {UsuariosService} from '../usuarios/usuarios.service';
-import {UsuarioInterface, Usuario} from '../../interfaces/usuario.interface';
-import { jwtConstants } from './constants';
+import { AuthService } from '../../../services/auth/auth.service';
+import { JwtStrategy } from '../../../services/auth/jwt.strategy';
+import { LocalStrategy } from '../../../services/auth/local.strategy';
+import {UsuariosService} from '../../../services/usuarios/usuarios.service';
+import {UsuarioInterface, Usuario} from '../../../interfaces/usuario.interface';
+import { jwtConstants } from '../../../services/auth/constants';
 
 const mockUsuario = {
   "email": "prueba9@gamil.com",
