@@ -21,8 +21,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "^1.5.1",
     "@golevelup/ts-jest": "^0.3.2",
+    "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.5",
     "@nestjs/core": "^8.0.0",
@@ -38,9 +38,9 @@
     "handlebars": "^4.7.7",
     "joi": "^17.5.0",
     "mongoose": "^6.0.14",
-    "nodemailer": "^6.7.2",
     "nest-mongo-query-parser": "^1.0.6",
     "nest-query-parser": "^1.4.3",
+    "nodemailer": "^6.7.2",
     "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

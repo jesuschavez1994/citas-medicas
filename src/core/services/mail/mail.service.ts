@@ -5,14 +5,14 @@ import { UsuarioInterface } from 'src/core/interfaces/usuario.interface';
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
-  async sendUserConfirmation( { nombre, correo }: UsuarioInterface ) {
+  async sendUserConfirmation( { name, email }: UsuarioInterface ) {
     await this.mailerService.sendMail({
-      to: correo,
+      to: email,
       // from: '"Support Team" <support@example.com>', // override default from
       subject: 'Bienvenido a Medicitate',
       template: './correo-bienvenida', // `.hbs` extension is appended automatically
       context: {
-        nombre
+        name
       }
     });
   }
