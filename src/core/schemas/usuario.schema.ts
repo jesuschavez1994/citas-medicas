@@ -9,14 +9,14 @@ export class Usuario {
     type: String,
     required: true
   })
-  nombre: string;
+  name: string;
 
   @Prop({
     type: String,
     required: true,
     unique: true,
   })
-  correo: string;
+  email: string;
 
   @Prop({
     type: String,
@@ -28,7 +28,7 @@ export class Usuario {
     type: Boolean,
     default: true,
   })
-  estado: boolean;
+  status: boolean;
 
   @Prop({
     type: Boolean,
@@ -51,7 +51,7 @@ export class Usuario {
 export const UsuarioSchema = SchemaFactory.createForClass(Usuario);
 // Metodo para extraer de  UsuarioSchema el password y la version: __v
 UsuarioSchema.methods.toJSON = function(this: any) {
-  const { __v, _id, password, ...usuario } = this.toObject();
-  usuario.id = _id;
-  return usuario;
+  const { __v, _id, password, ...user } = this.toObject();
+  user.id = _id;
+  return user;
 }

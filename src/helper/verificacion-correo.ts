@@ -7,16 +7,17 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { Model } from 'mongoose';
-import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
+import { Usuario, UsuarioDocument } from '../core/schemas/usuario.schema';
 import { Injectable } from '@nestjs/common';
 
 
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class UserAlreadyExistsContraint implements ValidatorConstraintInterface {
-  constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioDocument>) {}
-  validate(correo: string, args: ValidationArguments) {
-    return this.usuario.findOne({correo}).then(user => {
+  constructor(@InjectModel(Usuario.name) private user: Model<UsuarioDocument>) {}
+  validate(email: string, args: ValidationArguments) {
+    console.log(args)
+    return this.user.findOne({email}).then(user => {
       if (user) return false;
       return true;
     });

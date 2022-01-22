@@ -21,12 +21,12 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy,"jwt-refr
         const { token } = req.body;
         // parseamos el token => obtenemos el payload
         let payload = await parseJwt(token);
-        // obtenemos el correo del usuario
-        const { username: correo } = payload;
+        // obtenemos el email del usuario
+        const { username: email } = payload;
         // obtenemos el usuario => si existe
-        var usuario =  await this._usuariosService.obtenerUsuarioPorCorreo(correo);
+        var user =  await this._usuariosService.obtenerUsuario(email);
         // sacmos del usuario el password, id, __v
-        const { __v, _id, password, ...resul } =  usuario.toObject();
+        const { __v, _id, password, ...resul } =  user.toObject();
         // verificamos si el usuario existe
         if(!resul){
             throw new UnauthorizedException();
@@ -39,6 +39,6 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy,"jwt-refr
         if( new Date() > new Date((await resul).refreshtokenexpires)){
         throw new UnauthorizedException();
         }
-        return usuario;
+        return user;
     }
 }

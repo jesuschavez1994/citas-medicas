@@ -1,23 +1,22 @@
 import { Module  } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsuariosController } from './usuarios.controller';
-import { Usuario, UsuarioSchema } from 'src/core/schemas/usuario.schema';
-import { UserAlreadyExistsContraint } from 'src/helper/verificacion-correo';
-import { UsuarioServiceModule } from 'src/core/services/usuarios/usuario-service.module';
+import { Usuario, UsuarioSchema } from '../../core/schemas/usuario.schema';
+import { UsuariosService } from '../../core/services/usuarios/usuarios.service';
+import { UserAlreadyExistsContraint } from '../../helper/verificacion-correo';
 import { AuthModule } from 'src/core/services/auth/auth.module';
-import { MailServiceModule } from 'src/core/services/mail/mail-service.module';
+import { UsuarioServiceModule } from 'src/core/services/usuarios/usuario-service.module';
 
 @Module({
   imports: [
     MongooseModule
     .forFeature([{ name: Usuario.name, schema: UsuarioSchema }]),
     UsuarioServiceModule,
-    AuthModule,
-    MailServiceModule
+    AuthModule
   ],
   controllers: [UsuariosController],
   providers: [
-    UserAlreadyExistsContraint
+    UserAlreadyExistsContraint,
   ],
   exports: []
 })

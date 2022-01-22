@@ -1,44 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { crearEventoDTO } from 'src/core/dto/evento-calendario.dto';
-import { EventoCalendario, EventoCalendarioDocument } from 'src/core/schemas/evento-calendario.schema';
+import { PaginadoDTO } from '../../../core/dto/paginacion.dto';
+import { crearEventoDTO } from '../../../core/dto/evento-calendario.dto';
+import { EventoCalendario, EventoCalendarioDocument } from '../../../core/schemas/evento-calendario.schema';
+import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 
 @Injectable()
 export class EventosCalendarioService {
 
     constructor(@InjectModel(EventoCalendario.name) private readonly eventoCalendario: Model<EventoCalendarioDocument> ) {}
-
-    async crearEventoCalendario(evento: crearEventoDTO, idUsuario: string){
-        // se crea una instancia del  nuevo evento
-        const crearEvento = new this.eventoCalendario(evento);
-        // se le asigna el id del usuario que lo creo
-        crearEvento.usuario = idUsuario;
-        // se guarda ese evento en la base de datos
-        return await crearEvento.save();
+    elementosPopulate ={
+        path: 'user',
+        select: 'name email status google',
+    }
+     //✔️  test unitario//
+    async crearEventoCalendario(body:any, idUsuario: string){
+        const evento= await this.eventoCalendario.create({...body, user: idUsuario});;
+        return await evento.populate('user','name');
     }
 
-    async obtenerEventos(usuario: string, pagina?: number, limite?: number): Promise<any> {
-        return await Promise.all([
-            // numero total de eventos en el calendario
-            this.eventoCalendario.find({usuario}).count({}),
-            // listado de eventos paginados
-            this.eventoCalendario.find({usuario})
-            .skip((limite * pagina) - limite)
-            .limit(limite)
-            .populate('usuario', 'nombre correo estado google')
-        ]) 
+    async obtenerEventos(uid: string, @MongoQuery() query: MongoQueryModel): Promise<any> {
+        const events=await this.eventoCalendario.find({user:uid}).populate('user','name')
+        return  events;
     }
 
-    async actualizarEvento(body, id: string){
-        return await this.eventoCalendario.findByIdAndUpdate(id, body, {new: true}).populate('usuario', 'nombre correo estado google');
+    //✔️  test unitario//
+    async actualizarEvento(id: string ,body:any, @MongoQuery() query: MongoQueryModel){
+
+        const event= await this.eventoCalendario.findById(id)
+
+        return await this.eventoCalendario
+        .findByIdAndUpdate(event.id, body, {new: true})
+        .populate('user','name')
+        .exec();
     }
 
+     //✔️  test unitario//
     async eliminarEvento(id: string){
         // verificamos que existe el evento
-        const evento = await this.eventoCalendario.findById(id);
+        const event = await this.eventoCalendario.findById(id);
         // si existe, lo eliminamos
-        if(evento){
+        if(event){
             return await this.eventoCalendario.findByIdAndDelete(id);
         }else{
             return false

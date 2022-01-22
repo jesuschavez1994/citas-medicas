@@ -1,43 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CrearUsuarioDTO } from 'src/core/dto/usuario.dto';
-import { UsuarioInterface } from 'src/core/interfaces/usuario.interface';
-import { Usuario } from 'src/core/schemas/usuario.schema';
+import { ActualizarUsuarioDTO, CrearUsuarioDTO } from '../../../core/dto/usuario.dto';
+import { UsuarioInterface } from '../../../core/interfaces/usuario.interface';
+import { Usuario } from '../../../core/schemas/usuario.schema';
+import { PaginacionDTO } from '../../../core/dto/paginacion.dto';
+import { MongoQueryModel } from 'nest-mongo-query-parser';
 
 @Injectable()
 export class UsuariosService {
 
-    constructor(@InjectModel(Usuario.name) private usuario: Model<UsuarioInterface> ) {}
-
-    async obtenerUsuarios(desde?: number, limite?: number): Promise<UsuarioInterface[]>{
-        return await this.usuario.find({ estado: true }).skip(desde).limit(limite);
+    constructor(@InjectModel(Usuario.name) private user: Model<UsuarioInterface> ) {}
+    //✔️  test unitario //
+    async obtenerUsuarios( query: MongoQueryModel ): Promise<UsuarioInterface[]>{
+        return await this.user
+        .find({ status: true })
+        .limit(query.limit)
+        .skip(query.skip)
+        .sort(query.sort)
+        .select(query.select)
+        .exec();
     }
 
     async obtenerUsuario(id: string): Promise<any>{
-        return await this.usuario.findById( id );
+        return await this.user.findById( id );
     }
 
-    async obtenerUsuarioPorCorreo(correo: string): Promise<any>{
-        return await this.usuario.findOne( {correo} );
+    async obtenerUsuarioPorCorreo(email: string): Promise<any>{
+        return await this.user.findOne( {email} );
     }
 
+    //✔️  test unitario//
     async crearNuevoUsuario(crearUsuarioDTO: CrearUsuarioDTO): Promise<UsuarioInterface>{
-        const nuevoUsuario = new this.usuario(crearUsuarioDTO);
-        return await nuevoUsuario.save();
+        return await this.user.create(crearUsuarioDTO);
     }
 
-    async actualizarUsuario(idUsuario: string, crearUsuarioDTO: CrearUsuarioDTO): Promise<UsuarioInterface>{
-        const usarioActualizado = await this.usuario.findByIdAndUpdate(idUsuario, crearUsuarioDTO, {new: true});
+    //✔️  test unitario//
+    async actualizarUsuario(idUsuario: string, actualizarUsuarioDTO: ActualizarUsuarioDTO): Promise<UsuarioInterface>{
+        const usarioActualizado = await this.user.findByIdAndUpdate(idUsuario, actualizarUsuarioDTO, {new: true});
         return usarioActualizado;
     }
 
+    //✔️  test unitario//
     async borrarUsuario(idUsuario: string): Promise<UsuarioInterface>{
-        return await this.usuario.findByIdAndUpdate(idUsuario, { estado: false });
+        return await this.user.findByIdAndUpdate(idUsuario, { status: false }, {new: true});
     }
 
+      //✔️  test unitario//
     async guardarTokenRefresh(idUsuario: string, refreshtoken: string, refreshtokenexpires: Date): Promise<UsuarioInterface>{
-        return await this.usuario.findByIdAndUpdate(idUsuario, { refreshtoken: refreshtoken, refreshtokenexpires } , {new: true});
+        return await this.user.findByIdAndUpdate(idUsuario, { refreshtoken: refreshtoken, refreshtokenexpires } , {new: true});
     }
 
 

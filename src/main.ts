@@ -9,6 +9,9 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    }
   }));
   await app.listen(3000);
 }

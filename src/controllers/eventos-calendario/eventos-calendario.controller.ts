@@ -1,22 +1,25 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { actualizarEventoDTO, crearEventoDTO } from 'src/core/dto/evento-calendario.dto';
-import { JwtAuthGuard } from 'src/core/services/auth/jwt-auth.guard';
-import { EventosCalendarioService } from 'src/core/services/eventos-calendario/eventos-calendario.service';
+import { PaginadoDTO } from '../../core/dto/paginacion.dto';
+import { actualizarEventoDTO, crearEventoDTO } from '../../core/dto/evento-calendario.dto';
+import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
+import { EventosCalendarioService } from '../../core/services/eventos-calendario/eventos-calendario.service';
+import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
+import { paginaActual, totalPaginas } from '../../helper/paginacion';
 
-@Controller('api/eventos')
+@Controller('api/events')
 export class EventosCalendarioController {
 
     constructor(private readonly _eventoCalendarioService: EventosCalendarioService) {}
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async crearEventoCalendario(@Res() res: Response, @Body() body: crearEventoDTO, @Req() req: any) {
+    async crearEventoCalendario(@Res() res: Response, @Req() req: any, @MongoQuery() query: MongoQueryModel) {
         try {
-            const { id: idUsuario } = req;
-            const evento = await this._eventoCalendarioService.crearEventoCalendario(body, idUsuario);
-            return (evento) 
-            ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', evento }) 
+            const { id: idUser } = req;
+            const event = await this._eventoCalendarioService.crearEventoCalendario(req.body, idUser);
+            return (event) 
+            ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', event }) 
             : res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'No se pudo crear el evento' });
             
         }catch (error) {
@@ -29,25 +32,21 @@ export class EventosCalendarioController {
     async obtenerEventos(
         @Res() res: Response, 
         @Req() req: any, 
-        @Query('pagina') pagina: number = 1,
-        @Query('limite') limite: number = 5) {
-        // obtenemos el id del usuario del req
-        const { id: usuario } = req;
+        @MongoQuery() query: MongoQueryModel) {
+        // obtenemos el id del user del req
+        const { id: uid } = req;
 
         try {
-            // obtenemos los eventos creados por el usuario
-            const [total, eventos] = await this._eventoCalendarioService.obtenerEventos(usuario, Number(pagina), Number(limite));
+            // obtenemos los eventos creados por el user
+            const events = await this._eventoCalendarioService.obtenerEventos(uid, query);
             // retornamos la respuesta de los eventos
-            return (eventos.length > 0 ) 
+            return (events.length > 0 ) 
             // si existen eventos los enviamos
             ? res.status(HttpStatus.OK).json({ 
-                eventos,
-                totalEventos: total,
-                totalPaginas: Math.ceil(total / limite), 
-                paginaActual: pagina,
+                events
             })
-            // si no existen eventos creados, retornamos el siguiente mensaje
-            : res.status(HttpStatus.OK).json({ eventos, mensaje: 'No hay eventos creados' });
+            // si no existen eventos creados, retornamos el siguiente message
+            : res.status(HttpStatus.OK).json({ events, message: 'No hay eventos creados' });
             
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -56,11 +55,16 @@ export class EventosCalendarioController {
 
     @UseGuards(JwtAuthGuard)
     @Put('/:id')
-    async actualizarEvento(@Res() res: Response, @Body() body: actualizarEventoDTO, @Param('id') id: string) {
+    async actualizarEvento(
+        @Res() res: Response, 
+        @Param('id') id: string, 
+        @Req() req: any,
+        @MongoQuery() query: MongoQueryModel) {
+
         try {
-            const evento = await this._eventoCalendarioService.actualizarEvento(body, id);
-            return (evento) 
-            ?  res.status(HttpStatus.OK).json({  message: 'Evento actualizado', evento })
+            const event = await this._eventoCalendarioService.actualizarEvento(id,req.body, query);
+            return (event) 
+            ?  res.status(HttpStatus.OK).json({  message: 'Evento actualizado', event })
             : res.status(HttpStatus.BAD_REQUEST).json({ error: 'No se pudo actualizar el evento' });
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -74,8 +78,8 @@ export class EventosCalendarioController {
             // verififcamos que el evento exista
             const eventoEliminado = await this._eventoCalendarioService.eliminarEvento(id);
             return (eventoEliminado)
-            ? res.status(HttpStatus.OK).json({ mensaje: 'Evento Eliminado' })
-            : res.status(HttpStatus.BAD_REQUEST).json({ mensaje: 'Evento no existe' })
+            ? res.status(HttpStatus.OK).json({ message: 'Evento Eliminado' })
+            : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Evento no existe' })
             
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });

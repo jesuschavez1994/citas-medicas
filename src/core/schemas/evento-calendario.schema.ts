@@ -10,40 +10,40 @@ export class EventoCalendario {
     type: String,
     required: true
   })
-  titulo: string;
+  title: string;
 
   @Prop({
     type: String,
     required: true,
   })
-  descripcion: string;
+  description: string;
 
   @Prop({
     type: Date,
     required: true
   })
-  fechaInicio: Date;
+  start: Date;
 
   @Prop({
     type: Date,
     required: true
   })
-  fechaFinal: Date;
+  end: Date;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Usuario',
     required: true
   })
-  usuario: string;
+  user: string;
 
 }
 
 export const EventoCalendarioSchema = SchemaFactory.createForClass(EventoCalendario);
 // Metodo para extraer de  UsuarioSchema el password y la version: __v
 EventoCalendarioSchema.methods.toJSON = function(this: any) {
-  const { __v, _id, ...evento } = this.toObject();
-  evento.id = _id;
-  return evento;
+  const { __v, _id, ...event } = this.toObject();
+  event.id = _id;
+  return event;
 }
 

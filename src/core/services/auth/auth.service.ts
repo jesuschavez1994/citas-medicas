@@ -9,16 +9,18 @@ export class AuthService {
 
     constructor(private readonly _usuariosService: UsuariosService, private jwtService: JwtService) {}
 
-    async validarUsuario(correo: string, password: string): Promise<any> {
-        // Verificamos si el usuario existe, a traves del correo
-        const user = await this._usuariosService.obtenerUsuarioPorCorreo(correo);
+    //✔️  test unitario //
+    async validarUsuario(email: string, password: string): Promise<any> {
+        // Verificamos si el usuario existe, a traves del email
+        const user = await this._usuariosService.obtenerUsuarioPorCorreo(email);
+        console.log(user)
         if(!user) {
             return false;
         }
         // verificar la contraseña
         const validarPassword = bcrypt.compareSync( password, user.password );
         // validamos si existe el usuario y el password es correcto
-        if(user && validarPassword && user.estado) {
+        if(user && validarPassword && user.status) {
             // retornamos el usuario
             const { password, ...result} = user;
             return result;
@@ -26,6 +28,7 @@ export class AuthService {
         return null;
     }
 
+    //✔️  test unitario //
     async generateRefreshToken(userId):  Promise<string>{
         // Generando el token de actualización.
         var refreshToken = randomToken.generate(32); 
@@ -38,28 +41,28 @@ export class AuthService {
         return refreshToken
     }
 
+    //✔️  test unitario //
     async login(user: any) {
-        let  result;
+        //console.log( user  );
+        let result;
         // extraemos los datos del usuario
-        if(user._doc){
+        if(user._doc) {
             result = user._doc;
-        }else{
-            result = user;
-        }
+        }else{ result = user; }
         // sacamos de result los siguientes valores
-        const { __v, _id, password, ...usuario } =  result;
+        const { __v, _id, password, ..._user } =  result;
         // renombramos el id
-        usuario.id = _id;
-        // extraemos el correo y id de usuario
-       const {correo, id } = usuario;
+        _user.id = _id;
+        // extraemos el email y id de usuario
+       const {name,email, id } = _user;
        // construimos el payload
-        const payload = { username: correo, sub: id };
+        const payload = { username: email, sub: id };
         // generamos el token con la informacion del usuario
         return {
             token: this.jwtService.sign(payload),
             refreshToken: await this.generateRefreshToken(id),
-            nombre: usuario.nombre,
-            uid: usuario.id,
+            name,
+            uid: id,
         };
     }
 }

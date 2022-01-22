@@ -7,21 +7,21 @@ import {
     MinLength,
     IsMongoId,
     IsOptional} from 'class-validator';
-import { IsUserAlreadyExist } from 'src/helper/verificacion-correo';
+import { IsUserAlreadyExist } from '../../helper/verificacion-correo';
 
 export class CrearUsuarioDTO{
-    @IsNotEmpty({message: 'El nombre es obligatorio'})
-    @IsString({ message: 'El nombre de usuario debe de ser una cadena de texto' })
-    readonly nombre: string;
+    @IsNotEmpty({message: 'El name es obligatorio'})
+    @IsString({ message: 'El name de usuario debe de ser una cadena de texto' })
+    readonly name: string;
     @IsNotEmpty({message: 'El correo es obligatorio'})
     @IsEmail({ message: 'El correo debe de ser una dirección de correo válida' })
     @IsUserAlreadyExist({message: 'Este correo $value ya ha sido registrado',})
-    readonly correo: string;
+    readonly email: string;
     @IsString()
     @MinLength(8, {message: (args: ValidationArguments) => { return (args.value.length === 1) ? 'Demasiado corta, la longitud mínima es de 1 carácter.' :'Demasiado corta, la longitud mínima es '+ args.constraints[0] +' caracteres';} })
     password?: string;
     @Allow()
-    readonly estado: boolean;
+    readonly status: boolean;
     @Allow()
     readonly google: boolean;
     @IsOptional()
@@ -33,20 +33,17 @@ export class CrearUsuarioDTO{
 
 export class ActualizarUsuarioDTO{
     @IsOptional()
-    @IsString({ message: 'El nombre de usuario debe de ser una cadena de texto' })
-    @IsOptional()
-    readonly nombre: string;
+    @IsString({ message: 'El name de usuario debe de ser una cadena de texto' })
+    readonly name: string;
     @IsOptional()
     @IsEmail({ message: 'El correo debe de ser una dirección de correo válida' })
     @IsUserAlreadyExist({message: 'Este correo $value ya ha sido registrado',})
-    readonly correo: string;
-    @IsOptional()
+    readonly email: string;
     @IsString()
     @MinLength(8, {message: (args: ValidationArguments) => { return (args.value.length === 1) ? 'Demasiado corta, la longitud mínima es de 1 carácter.' :'Demasiado corta, la longitud mínima es '+ args.constraints[0] +' caracteres';} })
     password?: string;
     @Allow()
-    @IsOptional()
-    readonly estado: boolean;
+    readonly status: boolean;
     @Allow()
     @IsOptional()
     readonly google: boolean;

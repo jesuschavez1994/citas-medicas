@@ -27,10 +27,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw err || new UnauthorizedException('Token no válido');
     }else{
       // obtenemos el id del token
-      const {sub: id, username: correo} = jwt.verify(token,jwtConstants.secret);
+      const {sub: id, username: email} = jwt.verify(token,jwtConstants.secret);
       // enviamos el id del usuario al request
       request.id = id;
-      request.correo = correo;
+      request.email = email;
     }
     return user;
   }
