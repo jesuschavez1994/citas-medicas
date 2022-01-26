@@ -32,7 +32,7 @@ export class CrearUsuarioDTO{
     @IsOptional()
     readonly avatar?: string;
     @VerifyRoleExistInDB({message: 'El role $value no es valido'})
-    readonly role: string
+    role: string
 
 }
 

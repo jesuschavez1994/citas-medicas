@@ -49,7 +49,7 @@ export class Usuario {
 
   @Prop({
     required: true,
-    default: 'ADMIN_ROLE',
+    default: 'USER_ROLE',
     emun: ['ADMIN_ROLE', 'USER_ROLE']
   })
   role: string

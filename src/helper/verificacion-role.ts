@@ -16,8 +16,7 @@ import { Role, RolesDocument } from 'src/core/schemas/roles.schema';
 @Injectable()
 export class RoleAlreadyExistsContraint implements ValidatorConstraintInterface {
   constructor(@InjectModel(Role.name) private Role: Model<RolesDocument>) {}
-  validate(role: string, args: ValidationArguments) {
-      console.log(args);
+  validate(role : string = "USER_ROLE", args: ValidationArguments) {
     return this.Role.findOne({role}).then(role => {
       if (role) return true;
       return false;
