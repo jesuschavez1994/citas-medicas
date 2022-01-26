@@ -7,11 +7,15 @@ import { UserAlreadyExistsContraint } from '../../helper/verificacion-correo';
 import { AuthModule } from '../../core/services/auth/auth.module';
 import { UsuarioServiceModule } from 'src/core/services/usuarios/usuario-service.module';
 import { MailServiceModule } from '../../core/services/mail/mail-service.module';
+import { RoleAlreadyExistsContraint } from 'src/helper/verificacion-role';
+import { Role, RoleSchema } from 'src/core/schemas/roles.schema';
 
 @Module({
   imports: [
     MongooseModule
     .forFeature([{ name: Usuario.name, schema: UsuarioSchema }]),
+    MongooseModule
+    .forFeature([{ name: Role.name, schema: RoleSchema }]),
     UsuarioServiceModule,
     AuthModule,
     MailServiceModule
@@ -19,6 +23,7 @@ import { MailServiceModule } from '../../core/services/mail/mail-service.module'
   controllers: [UsuariosController],
   providers: [
     UserAlreadyExistsContraint,
+    RoleAlreadyExistsContraint
   ],
   exports: []
 })

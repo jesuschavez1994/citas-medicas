@@ -7,7 +7,9 @@ import {
     MinLength,
     IsMongoId,
     IsOptional} from 'class-validator';
+import { VerifyRoleExistInDB } from 'src/helper/verificacion-role';
 import { IsUserAlreadyExist } from '../../helper/verificacion-correo';
+
 
 export class CrearUsuarioDTO{
     @IsNotEmpty({message: 'El name es obligatorio'})
@@ -15,7 +17,7 @@ export class CrearUsuarioDTO{
     readonly name: string;
     @IsNotEmpty({message: 'El correo es obligatorio'})
     @IsEmail({ message: 'El correo debe de ser una dirección de correo válida' })
-    @IsUserAlreadyExist({message: 'Este correo $value ya ha sido registrado',})
+    @IsUserAlreadyExist({message: 'Este correo $value ya ha sido registrado'})
     readonly email: string;
     @IsString()
     @MinLength(8, {message: (args: ValidationArguments) => { return (args.value.length === 1) ? 'Demasiado corta, la longitud mínima es de 1 carácter.' :'Demasiado corta, la longitud mínima es '+ args.constraints[0] +' caracteres';} })
@@ -29,6 +31,9 @@ export class CrearUsuarioDTO{
     readonly id?: string;
     @IsOptional()
     readonly avatar?: string;
+    @VerifyRoleExistInDB({message: 'El role $value no es valido'})
+    readonly role: string
+
 }
 
 export class ActualizarUsuarioDTO{

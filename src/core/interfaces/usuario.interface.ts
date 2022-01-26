@@ -10,6 +10,7 @@ export interface UsuarioInterface extends Document{
     refreshtokenexpires?: Date
     __v: number;
     _id: string;
+    role: string
 }
 
 export interface Usuario {
@@ -20,4 +21,5 @@ export interface Usuario {
     password: string;
     refreshtoken?: string
     refreshtokenexpires?: Date
+    role: string
 }

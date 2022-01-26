@@ -7,30 +7,32 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { Model } from 'mongoose';
-import { Usuario, UsuarioDocument } from '../core/schemas/usuario.schema';
 import { Injectable } from '@nestjs/common';
+import { Role, RolesDocument } from 'src/core/schemas/roles.schema';
+
 
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class UserAlreadyExistsContraint implements ValidatorConstraintInterface {
-  constructor(@InjectModel(Usuario.name) private user: Model<UsuarioDocument>) {}
-  validate(email: string, args: ValidationArguments) {
-    return this.user.findOne({email}).then(user => {
-      if (user) return false;
-      return true;
+export class RoleAlreadyExistsContraint implements ValidatorConstraintInterface {
+  constructor(@InjectModel(Role.name) private Role: Model<RolesDocument>) {}
+  validate(role: string, args: ValidationArguments) {
+      console.log(args);
+    return this.Role.findOne({role}).then(role => {
+      if (role) return true;
+      return false;
     });
   }
 }
   
-export function IsUserAlreadyExist(validationOptions?: ValidationOptions) {
+export function VerifyRoleExistInDB(validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
       constraints: [],
-      validator: UserAlreadyExistsContraint,
+      validator: RoleAlreadyExistsContraint,
     });
   };
 }

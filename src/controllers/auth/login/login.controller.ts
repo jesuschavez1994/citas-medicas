@@ -66,7 +66,7 @@ export class LoginController {
             // si el usuario no existe, creamos un nuevo usuario
             if(!user){
                 // creamos el usuario
-                const data = { name, avatar, email, password: ':p', google: true, status: true };
+                const data = { name, avatar, email, password: ':p', google: true, status: true, role: 'ADMIN_ROLE' };
                 // guardamos el usuario
                 const user = await this._usuariosService.crearNuevoUsuario(data);
                 // creamos el token y retornamos la respuesta
