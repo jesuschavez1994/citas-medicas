@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, UseGuards, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, Req, UseGuards, Param } from '@nestjs/common';
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
@@ -12,6 +12,7 @@ import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
 import { PaginacionDTO } from '../../core/dto/paginacion.dto';
 import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 import { AuthService } from 'src/core/services/auth/auth.service';
+import { paginaActual, totalPaginas } from 'src/helper/paginacion';
 
 @Controller('api/users')
 export class UsuariosController {
@@ -24,11 +25,17 @@ export class UsuariosController {
     ) {}
 
     @Get()
-    async obtenerUsuarios(@Res() res: Response, @MongoQuery() query: MongoQueryModel) {
+    async obtenerUsuarios(@Res() res: Response, @MongoQuery() query: MongoQueryModel, @Req() req: any, ) {
         try {
-            const users = await this._usuarioService
-            .obtenerUsuarios( query );
-            return res.status(HttpStatus.OK).json({ users });
+            const { id: uid } = req;
+            const [total, users]  = await this._usuarioService.obtenerUsuarios( uid, query );
+            console.log(total);
+            return res.status(HttpStatus.OK).json({ 
+                users, 
+                totalUsuarios: total,
+                totalPaginas: await totalPaginas(total, query),
+                paginaActual: await paginaActual(query), 
+            });
         }catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
         }

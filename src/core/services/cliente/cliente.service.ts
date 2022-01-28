@@ -10,8 +10,10 @@ export class ClienteService {
 
     constructor(@InjectModel(Client.name) private client: Model<ClientDocument> ) {}
 
-    async Client(data: ClientDTO, idUser: string, @MongoQuery() query: MongoQueryModel){ 
-        return await (await this.client.create({...data, user: idUser}));
+    async Client(idUser: string,  @MongoQuery() query: MongoQueryModel){ 
+        console.log(query);
+        const data = query.filter;
+        return await (await this.client.create({...data, user: idUser})).populate('user', 'name');
     }
 
 }

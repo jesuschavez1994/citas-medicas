@@ -12,7 +12,21 @@ export class UsuariosService {
 
     constructor(@InjectModel(Usuario.name) private user: Model<UsuarioInterface> ) {}
     //✔️  test unitario //
-    async obtenerUsuarios( query: MongoQueryModel ): Promise<UsuarioInterface[]>{
+    async obtenerUsuarios( uid: string, query: MongoQueryModel ): Promise<any>{
+        return await Promise.all([
+            // numero total de eventos en el calendario
+            this.user
+            .find({uid})
+            .count({})
+            .exec(),
+            // listado de eventos paginados
+            this.user
+            .find({uid})
+            .limit(query.limit)
+            .skip(query.skip)
+            .populate(query.populate)
+            .exec()
+        ]) 
         return await this.user
         .find({ status: true })
         .limit(query.limit)

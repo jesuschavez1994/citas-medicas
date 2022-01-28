@@ -12,10 +12,10 @@ export class ClienteController {
 
     @UseGuards(JwtAuthGuard)
     @Post('/:id')
-    async Cliente(@Res() res: Response, @Req() req: any, @Body() body: ClientDTO, @Param('id') idUser: string,  @MongoQuery() query: MongoQueryModel){
+    async Cliente(@Res() res: Response, @Req() req: any, @Param('id') idUser: string,  @MongoQuery() query: MongoQueryModel){
         try{
             console.log(query);
-            const client = await this._clientService.Client(body, idUser, query);
+            const client = await this._clientService.Client(idUser, query);
             return res.status(HttpStatus.OK).json({
                 client
             })

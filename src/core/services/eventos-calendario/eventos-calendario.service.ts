@@ -37,12 +37,9 @@ export class EventosCalendarioService {
     }
 
     //✔️  test unitario//
-    async actualizarEvento(id: string ,body:any, @MongoQuery() query: MongoQueryModel){
-
-        const event= await this.eventoCalendario.findById(id)
-
+    async actualizarEvento(id: string , @MongoQuery() query: MongoQueryModel){
         return await this.eventoCalendario
-        .findByIdAndUpdate(event.id, body, {new: true})
+        .findByIdAndUpdate(id, query.filter, {new: true})
         .populate(query.populate)
         .exec();
     }

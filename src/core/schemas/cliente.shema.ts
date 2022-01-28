@@ -13,17 +13,17 @@ export class Client {
   description: string;
 
   @Prop({
-    type: String,
+    type: Date,
   })
   birthDate: Date;
 
   @Prop({
-    type: Boolean,
+    type: Number,
   })
   age: number;
 
   @Prop({
-    type: Boolean,
+    type: String,
   })
   address: String;
 
@@ -41,4 +41,10 @@ export class Client {
 }
 
 export const Clientchema = SchemaFactory.createForClass(Client);
+Clientchema.methods.toJSON = function(this: any) {
+  const { __v, _id, ...result } = this.toObject();
+  result.id = _id;
+  return result;
+}
+
 

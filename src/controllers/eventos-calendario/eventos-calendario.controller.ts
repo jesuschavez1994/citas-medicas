@@ -17,7 +17,7 @@ export class EventosCalendarioController {
     async crearEventoCalendario(@Res() res: Response, @Req() req: any, @MongoQuery() query: MongoQueryModel) {
         try {
             const { id: idUser } = req;
-            const event = await this._eventoCalendarioService.crearEventoCalendario(req.body, idUser);
+            const event = await this._eventoCalendarioService.crearEventoCalendario(query, idUser);
             return (event) 
             ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', event }) 
             : res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'No se pudo crear el evento' });
@@ -38,12 +38,15 @@ export class EventosCalendarioController {
 
         try {
             // obtenemos los eventos creados por el user
-            const events = await this._eventoCalendarioService.obtenerEventos(uid, query);
+            const [total, events] = await this._eventoCalendarioService.obtenerEventos(uid, query);
             // retornamos la respuesta de los eventos
             return (events.length > 0 ) 
             // si existen eventos los enviamos
             ? res.status(HttpStatus.OK).json({ 
-                events
+                events,
+                totalEventos: total,
+                totalPaginas: await totalPaginas(total, query),
+                paginaActual: await paginaActual(query),
             })
             // si no existen eventos creados, retornamos el siguiente message
             : res.status(HttpStatus.OK).json({ events, message: 'No hay eventos creados' });
@@ -58,11 +61,10 @@ export class EventosCalendarioController {
     async actualizarEvento(
         @Res() res: Response, 
         @Param('id') id: string, 
-        @Req() req: any,
         @MongoQuery() query: MongoQueryModel) {
 
         try {
-            const event = await this._eventoCalendarioService.actualizarEvento(id,req.body, query);
+            const event = await this._eventoCalendarioService.actualizarEvento(id, query);
             return (event) 
             ?  res.status(HttpStatus.OK).json({  message: 'Evento actualizado', event })
             : res.status(HttpStatus.BAD_REQUEST).json({ error: 'No se pudo actualizar el evento' });
