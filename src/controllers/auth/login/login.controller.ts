@@ -19,7 +19,6 @@ export class LoginController {
             const credenciales = await this._authService.login(user);
 
             return  res.status(HttpStatus.OK).json({
-                message: 'Usuario creado',
                 ...credenciales
             })
         } catch (error) {

@@ -10,7 +10,10 @@ import { EventosCalendarioModule } from './controllers/eventos-calendario/evento
 import { UsuarioServiceModule } from './core/services/usuarios/usuario-service.module';
 import { MailService } from './core/services/mail/mail.service';
 import { MailServiceModule } from './core/services/mail/mail-service.module';
-
+import { ClienteController } from './controllers/cliente/cliente.controller';
+import { ClienteService } from './core/services/cliente/cliente.service';
+import { ClienteControllerModule } from './controllers/cliente/cliente-controller.module';
+import { ClienteServiceModule } from './core/services/cliente/cliente-service.module'
 
 @Module({
   imports: [
@@ -22,8 +25,10 @@ import { MailServiceModule } from './core/services/mail/mail-service.module';
     UsuarioServiceModule,
     EventosCalendarioModule,
     MailServiceModule,
+    ClienteControllerModule,
+    ClienteServiceModule
   ],
-  controllers: [AppController, LoginController],
+  controllers: [AppController, LoginController, ClienteController],
   providers: [AppService, MailService],
 })
 export class AppModule {}
