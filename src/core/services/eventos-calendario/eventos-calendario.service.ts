@@ -10,19 +10,30 @@ import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 export class EventosCalendarioService {
 
     constructor(@InjectModel(EventoCalendario.name) private readonly eventoCalendario: Model<EventoCalendarioDocument> ) {}
-    elementosPopulate ={
-        path: 'user',
-        select: 'name email status google',
-    }
+
      //✔️  test unitario//
-    async crearEventoCalendario(body:any, idUsuario: string){
-        const evento= await this.eventoCalendario.create({...body, user: idUsuario});;
+    async crearEventoCalendario(@MongoQuery() query: MongoQueryModel, idUsuario: string){
+        const eventos = query.filter
+        const evento= await this.eventoCalendario.create({...eventos, user: idUsuario});;
         return await evento.populate('user','name');
     }
 
-    async obtenerEventos(uid: string, @MongoQuery() query: MongoQueryModel): Promise<any> {
-        const events=await this.eventoCalendario.find({user:uid}).populate('user','name')
-        return  events;
+    async obtenerEventos(user: string, @MongoQuery() query: MongoQueryModel): Promise<any> {
+        
+        return await Promise.all([
+            // numero total de eventos en el calendario
+            this.eventoCalendario
+            .find({user})
+            .count({})
+            .exec(),
+            // listado de eventos paginados
+            this.eventoCalendario
+            .find({user})
+            .limit(query.limit)
+            .skip(query.skip)
+            .populate(query.populate)
+            .exec()
+        ]) 
     }
 
     //✔️  test unitario//
@@ -32,7 +43,7 @@ export class EventosCalendarioService {
 
         return await this.eventoCalendario
         .findByIdAndUpdate(event.id, body, {new: true})
-        .populate('user','name')
+        .populate(query.populate)
         .exec();
     }
 
