@@ -3,7 +3,8 @@ import {
     IsString, 
     IsNotEmpty, 
     IsDate,
-    IsOptional
+    IsOptional,
+    IsNumber
 } from 'class-validator';
 
 export class ClientDTO{
@@ -15,13 +16,15 @@ export class ClientDTO{
     @Type(() => Date)
     readonly birthDate: Date;
     @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    readonly age: Date;
+    @IsNumber()
+    readonly age: number;
     @IsOptional()
     @IsString({ message: 'La direción debe de ser una cadena de texto' })
     readonly address: string;
     @IsOptional()
     @IsString()
     readonly avatar: string;
+    @IsOptional()
+    @IsString({ message: 'El nombre debe de ser una cadena de texto' })
+    readonly nameComplete: string;
 }

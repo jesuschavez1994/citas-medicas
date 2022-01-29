@@ -27,16 +27,9 @@ export class UsuariosService {
             .populate(query.populate)
             .exec()
         ]) 
-        return await this.user
-        .find({ status: true })
-        .limit(query.limit)
-        .skip(query.skip)
-        .sort(query.sort)
-        .select(query.select)
-        .exec();
     }
 
-    async obtenerUsuario(id: string): Promise<any>{
+    async obtenerUsuario(id: string): Promise<UsuarioInterface>{
         return await this.user.findById( id );
     }
 

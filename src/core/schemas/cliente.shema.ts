@@ -10,6 +10,11 @@ export class Client {
   @Prop({
     type: String,
   })
+  userName: string;
+
+  @Prop({
+    type: String,
+  })
   description: string;
 
   @Prop({
@@ -29,6 +34,7 @@ export class Client {
 
   @Prop({
     type: String,
+    default: null
   })
   avatar:string;
 

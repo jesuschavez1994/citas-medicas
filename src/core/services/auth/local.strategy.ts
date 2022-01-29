@@ -15,7 +15,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(email: string, password: string): Promise<any> {
     const user = await this.authService.validarUsuario(email, password);
-    console.log('correo',email)
     if(user === false){
       throw new BadRequestException('Usuario no existe');
     }

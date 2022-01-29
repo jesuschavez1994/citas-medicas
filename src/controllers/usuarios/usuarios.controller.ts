@@ -29,7 +29,6 @@ export class UsuariosController {
         try {
             const { id: uid } = req;
             const [total, users]  = await this._usuarioService.obtenerUsuarios( uid, query );
-            console.log(total);
             return res.status(HttpStatus.OK).json({ 
                 users, 
                 totalUsuarios: total,
