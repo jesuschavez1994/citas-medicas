@@ -34,7 +34,6 @@ export class ClienteController {
         @Body() body: ClientDTO){
         try{
             const client = await this._clientService.Client(idUser, body);
-            console.log(client);
             if(!client){
                 return res.status(HttpStatus.BAD_REQUEST).json({
                     message: 'El usuario no existe'

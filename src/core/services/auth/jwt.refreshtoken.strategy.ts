@@ -22,9 +22,9 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy,"jwt-refr
         // parseamos el token => obtenemos el payload
         let payload = await parseJwt(token);
         // obtenemos el email del usuario
-        const { username: email } = payload;
+        const { username: email, sub: id } = payload;
         // obtenemos el usuario => si existe
-        var user =  await this._usuariosService.obtenerUsuario(email);
+        var user =  await this._usuariosService.obtenerUsuario(id);
         // sacmos del usuario el password, id, __v
         const { __v, _id, password, ...resul } =  user.toObject();
         // verificamos si el usuario existe

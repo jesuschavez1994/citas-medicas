@@ -42,7 +42,6 @@ export class AuthService {
 
     //✔️  test unitario //
     async login(user: any) {
-        //console.log( user  );
         let result;
         // extraemos los datos del usuario
         if(user._doc) {

@@ -31,7 +31,7 @@ export class LoginController {
     }
 
     @UseGuards(AuthGuard('jwt-refreshtoken'))
-    @Get('refreshtoken')
+    @Post('refreshtoken')
     async refreshToken(@Request() req, @Res() res: Response){
 
     const { id: idUser } = req;

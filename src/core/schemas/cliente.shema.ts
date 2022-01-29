@@ -10,7 +10,7 @@ export class Client {
   @Prop({
     type: String,
   })
-  userName: string;
+  nameComplete: string;
 
   @Prop({
     type: String,
