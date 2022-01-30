@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PaginadoDTO } from '../../../core/dto/paginacion.dto';
-import { crearEventoDTO } from '../../../core/dto/evento-calendario.dto';
+import { actualizarEventoDTO, crearEventoDTO } from '../../../core/dto/evento-calendario.dto';
 import { EventoCalendario, EventoCalendarioDocument } from '../../../core/schemas/evento-calendario.schema';
 import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 
@@ -36,11 +36,17 @@ export class EventosCalendarioService {
     }
 
     //✔️  test unitario//
-    async actualizarEvento(id: string , @MongoQuery() query: MongoQueryModel){
-        return await this.eventoCalendario
-        .findByIdAndUpdate(id, query.filter, {new: true})
-        .populate(query.populate)
-        .exec();
+    async actualizarEvento(id: string , @MongoQuery() query: MongoQueryModel, body: actualizarEventoDTO){
+        if(query){
+            return await this.eventoCalendario
+            .findByIdAndUpdate(id, body, {new: true})
+            .populate(query.populate)
+            .exec();
+        }else{
+            return await this.eventoCalendario
+            .findByIdAndUpdate(id, body, {new: true})
+            .exec();
+        }
     }
 
      //✔️  test unitario//

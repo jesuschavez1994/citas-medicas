@@ -61,10 +61,11 @@ export class EventosCalendarioController {
     async actualizarEvento(
         @Res() res: Response, 
         @Param('id') id: string, 
-        @MongoQuery() query: MongoQueryModel) {
+        @MongoQuery() query: MongoQueryModel,
+        @Body() body: actualizarEventoDTO) {
 
         try {
-            const event = await this._eventoCalendarioService.actualizarEvento(id, query);
+            const event = await this._eventoCalendarioService.actualizarEvento(id, query, body);
             return (event) 
             ?  res.status(HttpStatus.OK).json({  message: 'Evento actualizado', event })
             : res.status(HttpStatus.BAD_REQUEST).json({ error: 'No se pudo actualizar el evento' });
