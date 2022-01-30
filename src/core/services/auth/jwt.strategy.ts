@@ -22,7 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   // El método 'Validate ()' se ejecuta para un token válido y devuelve la 
   //información del usuario agregándola al objeto 'Solicitud'.
   async validate(payload: any) {
-    console.log( payload.username);
     return { userId: payload.sub, username: payload.username };
   }
 }

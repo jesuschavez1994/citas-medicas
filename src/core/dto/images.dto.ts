@@ -3,9 +3,7 @@ import {
     IsString, 
 } from 'class-validator';
 
-export class RefreshTokenDTO{
+export class ImagesDTO{
     @IsString()
-    readonly refreshToken: string;
-    @IsString()
-    readonly token: string;
+    readonly title: string;
 }

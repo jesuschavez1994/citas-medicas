@@ -12,9 +12,8 @@ export class EventosCalendarioService {
     constructor(@InjectModel(EventoCalendario.name) private readonly eventoCalendario: Model<EventoCalendarioDocument> ) {}
 
      //✔️  test unitario//
-    async crearEventoCalendario(@MongoQuery() query: MongoQueryModel, idUsuario: string){
-        const eventos = query.filter
-        const evento= await this.eventoCalendario.create({...eventos, user: idUsuario});;
+    async crearEventoCalendario(body: crearEventoDTO, idUsuario: string){
+        const evento= await this.eventoCalendario.create({...body, user: idUsuario});;
         return await evento.populate('user','name');
     }
 

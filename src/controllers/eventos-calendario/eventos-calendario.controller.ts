@@ -14,10 +14,10 @@ export class EventosCalendarioController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async crearEventoCalendario(@Res() res: Response, @Req() req: any, @MongoQuery() query: MongoQueryModel) {
+    async crearEventoCalendario(@Res() res: Response, @Req() req: any, @Body() body: crearEventoDTO) {
         try {
             const { id: idUser } = req;
-            const event = await this._eventoCalendarioService.crearEventoCalendario(query, idUser);
+            const event = await this._eventoCalendarioService.crearEventoCalendario(body, idUser);
             return (event) 
             ?  res.status(HttpStatus.OK).json({  message: 'Evento creado', event }) 
             : res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'No se pudo crear el evento' });

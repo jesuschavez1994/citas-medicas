@@ -1,6 +1,8 @@
-import { Controller, Request, Post, UseGuards, Res, HttpStatus, Get } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Res, HttpStatus, Get, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
+import { RefreshTokenDTO } from 'src/core/dto/auth.dto';
+import { parseJwt } from 'src/helper/parseJwt';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { LocalAuthGuard } from '../../../core/services/auth/local-auth.guard';
 import { UsuariosService } from '../../../core/services/usuarios/usuarios.service';
@@ -34,16 +36,21 @@ export class LoginController {
     @Post('refreshtoken')
     async refreshToken(@Request() req, @Res() res: Response){
 
-    const { id: idUser } = req;
+    //const { id: idUser } = req;
+    const { token } = req.body;
+    // parseamos el token => obtenemos el payload
+    let payload = await parseJwt(token);
+    // obtenemos el email del usuario
+    const { username: email, sub: id } = payload;
 
-      try {
-        const user = this._usuariosService.obtenerUsuario(idUser);
+    try {
+        const user = await this._usuariosService.obtenerUsuario(id);
         // Obtenemos las credenciales
         const credenciales = await this._authService.login(user);
         return  res.status(HttpStatus.OK).json({
             ...credenciales
         })
-      } catch (error) {
+    }catch (error) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             status: HttpStatus.INTERNAL_SERVER_ERROR,
             error: error.message,

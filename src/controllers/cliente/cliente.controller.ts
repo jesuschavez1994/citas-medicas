@@ -1,14 +1,11 @@
 import { 
     Body, 
-    Controller, 
-    Delete, 
+    Controller,  
     Get,
     Patch, 
     HttpStatus, 
     Param, Post, 
-    Put, 
-    Query, 
-    Req, 
+    Put,  
     Res, 
     UseGuards, 
     UseInterceptors,
@@ -20,6 +17,12 @@ import { ClienteService } from '../../core/services/cliente/cliente.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
 import { ClientDTO } from 'src/core/dto/cliente.dto';
+import { diskStorage } from 'multer';
+import { renameImages } from 'src/helper/rename-images';
+import { fileFilter } from 'src/helper/file-fillter';
+const fs   = require('fs');
+const path = require('path');
+// import {} from '../../../upload'
 
 @Controller('api/clients')
 export class ClienteController {
@@ -57,9 +60,15 @@ export class ClienteController {
         }
     }
 
-    @UseGuards(JwtAuthGuard)
+    //@UseGuards(JwtAuthGuard)
     @Patch(':id/photo')
-    @UseInterceptors(FileInterceptor('file'))
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination:'./upload',
+            filename: renameImages
+        }),
+        //fileFilter: fileFilter
+    }))
     async updatePhotoProfile(@Param('id') id: string, @UploadedFile() file: Express.Multer.File, @Res() res: Response){
         try{
             //verificamos que el usuario existe con el id
@@ -73,7 +82,7 @@ export class ClienteController {
                 const VerifyUser = await this._usuarioService.obtenerUsuario(_id)
                 const { status } = VerifyUser;
                 if( status ){
-                    const { avatar } = await this._clientService.updatePhotoProfile(id, file);
+                    const { avatar } = await this._clientService.updatePhotoProfile(id, file.filename);
                     return ( client ) 
                     ? res.status(HttpStatus.OK).json({avatar}) 
                     : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Ha ocurrido un error' })  
@@ -125,6 +134,35 @@ export class ClienteController {
                             message: 'El usuario no existe'
                         });
                     }
+                }
+            }
+        }catch(error){
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+        }
+    }
+
+    @Get(':id/photo')
+    async getPhotoClient(@Param('id') id: string, @Res() res: Response){
+        try{
+            const client = await this._clientService.GetClient(id);
+            if(!client){
+                return res.status(HttpStatus.BAD_REQUEST).json({
+                    message: 'El usuario no existe'
+                })
+            }else if(client){
+                const{ user: _id } = client;
+                const VerifyUser = await this._usuarioService.obtenerUsuario(_id)
+                const { status } = VerifyUser;
+                if( status ){
+                    const { avatar } = client;
+                    const pathImagen = path.join( __dirname, '../../../upload', avatar );
+                     if ( fs.existsSync( pathImagen ) ) {
+                        return res.sendFile( pathImagen )
+                    } 
+                }else{
+                    return res.status(HttpStatus.BAD_REQUEST).json({
+                            message: 'El usuario no existe'
+                    });
                 }
             }
         }catch(error){
