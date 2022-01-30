@@ -14,6 +14,13 @@ import { ClienteController } from './controllers/cliente/cliente.controller';
 import { ClienteService } from './core/services/cliente/cliente.service';
 import { ClienteControllerModule } from './controllers/cliente/cliente-controller.module';
 import { ClienteServiceModule } from './core/services/cliente/cliente-service.module'
+import { MedicoController } from './controllers/medico/medico.controller';
+import { MedicoService } from './core/services/medico/medico.service';
+import { MedicoServiceModule } from './core/services/medico/medico-service.module';
+import { MedicoModule } from './controllers/medico/medico.module';
+import { EspecialidadesController } from './controllers/especialidades/especialidades.controller';
+import { EspecialidadesModule } from './controllers/especialidades/especialidades.module';
+import { EspecialidadesServiceModule } from './core/services/especialidades/especialidades-service.module';
 
 @Module({
   imports: [
@@ -26,9 +33,18 @@ import { ClienteServiceModule } from './core/services/cliente/cliente-service.mo
     EventosCalendarioModule,
     MailServiceModule,
     ClienteControllerModule,
-    ClienteServiceModule
+    ClienteServiceModule,
+    MedicoServiceModule,
+    EspecialidadesModule,
+    EspecialidadesServiceModule
   ],
-  controllers: [AppController, LoginController, ClienteController],
-  providers: [AppService, MailService],
+  controllers: [
+    AppController, 
+    LoginController, 
+    ClienteController, 
+    MedicoController, EspecialidadesController],
+  providers: [
+    AppService, 
+    MailService,]
 })
 export class AppModule {}

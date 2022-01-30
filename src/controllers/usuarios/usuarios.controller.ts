@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { MailService } from 'src/core/services/mail/mail.service';
 import { join } from 'path';
-import { ActualizarUsuarioDTO, BorrarUsuarioDTO, CrearUsuarioDTO } from '../../core/dto/usuario.dto';
+import { ActualizarUsuarioDTO, CrearUsuarioDTO } from '../../core/dto/usuario.dto';
 import { UsuariosService } from '../../core/services/usuarios/usuarios.service';
 import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
 import { PaginacionDTO } from '../../core/dto/paginacion.dto';
@@ -100,7 +100,7 @@ export class UsuariosController {
     
     @UseGuards(JwtAuthGuard)
     @Delete('/:id')
-    async borrarUsuario(@Res() res: Response, @Body() body: BorrarUsuarioDTO,  @Param('id') id: string) {
+    async borrarUsuario(@Res() res: Response, @Param('id') id: string) {
         try {
             // Esperamos que el servicio responda
             const usarioBorrado = await this._usuarioService.borrarUsuario(id);

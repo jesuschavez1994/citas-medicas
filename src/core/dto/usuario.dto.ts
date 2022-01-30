@@ -56,8 +56,4 @@ export class ActualizarUsuarioDTO{
     readonly avatar?: string;
 }
 
-export class BorrarUsuarioDTO{
-    @IsNotEmpty()
-    @IsMongoId({ message: 'El id no es valido' })
-    readonly id?: string
-}
+

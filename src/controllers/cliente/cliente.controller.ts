@@ -39,7 +39,7 @@ export class ClienteController {
             const client = await this._clientService.Client(idUser, body);
             if(!client){
                 return res.status(HttpStatus.BAD_REQUEST).json({
-                    message: 'El usuario no existe'
+                    message: 'Ha ocurrido un error'
                 })
             }else if(client){
                 const{ user: _id } = client;
