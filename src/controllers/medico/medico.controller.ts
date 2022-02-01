@@ -19,6 +19,7 @@ import { Response } from 'express';
 import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
 import { EspecialidadesService } from 'src/core/services/especialidades/especialidades.service';
 import { SpecialityModel } from 'src/core/interfaces/specialitys.interface';
+import { ValidateMongoId } from 'src/core/pipes/validacion-mongo-id.pipe';
 @Controller('api/medic')
 export class MedicoController {
     constructor(
@@ -30,7 +31,7 @@ export class MedicoController {
     @Post('/:id')
     async createMedic(
     @Res() res: Response, 
-    @Param('id') iduser: string, 
+    @Param('id', ValidateMongoId) iduser: string, 
     @Body() body: MedicDTO){
         let status:boolean;
         

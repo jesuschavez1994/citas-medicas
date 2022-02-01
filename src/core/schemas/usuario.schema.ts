@@ -52,7 +52,13 @@ export class Usuario {
     default: 'USER_ROLE',
     emun: ['ADMIN_ROLE', 'USER_ROLE']
   })
-  role: string
+  role: string;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isEmailConfirmed: boolean;
 }
 
 

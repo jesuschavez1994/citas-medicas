@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, Req, UseGuards, Param } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Res, HttpStatus, Body, Put, Query, Req, UseGuards, Param, Render } from '@nestjs/common';
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { Usuario, UsuarioDocument } from 'src/core/schemas/usuario.schema';
@@ -13,6 +13,7 @@ import { PaginacionDTO } from '../../core/dto/paginacion.dto';
 import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { paginaActual, totalPaginas } from 'src/helper/paginacion';
+import { ValidateMongoId } from 'src/core/pipes/validacion-mongo-id.pipe';
 
 @Controller('api/users')
 export class UsuariosController {
@@ -41,7 +42,7 @@ export class UsuariosController {
     }
 
     @Get('/:id')
-    async obtenerUsuario(@Res() res: Response, @Param('id') id: string){
+    async obtenerUsuario(@Res() res: Response, @Param('id', ValidateMongoId) id: string){
         try {
             const user = await this._usuarioService.obtenerUsuario(id);
             return res.status(HttpStatus.OK).json({ user });
@@ -64,6 +65,8 @@ export class UsuariosController {
             const credenciales = await this._authService.login(user);
             // Extraemos las credenciales del usuario
             const { token, refreshToken } = credenciales;
+            //enviamos correo de confirmacion
+            await this._mailService.sendUserConfirmation(user, token);
             // resgresamos el user creado
             return res.status(HttpStatus.OK).json({
                 message: 'Usuario creado',
@@ -78,7 +81,7 @@ export class UsuariosController {
 
     @UseGuards(JwtAuthGuard)
     @Put('/:id')
-    async actualizarusuario(@Res() res: Response, @Body() body: ActualizarUsuarioDTO, @Param('id') id: string ){
+    async actualizarusuario(@Res() res: Response, @Body() body: ActualizarUsuarioDTO, @Param('id', ValidateMongoId) id: string ){
         try {
             // Si el password existe lo actualizamos
             if( body.password ){
@@ -100,7 +103,7 @@ export class UsuariosController {
     
     @UseGuards(JwtAuthGuard)
     @Delete('/:id')
-    async borrarUsuario(@Res() res: Response, @Param('id') id: string) {
+    async borrarUsuario(@Res() res: Response, @Param('id', ValidateMongoId) id: string) {
         try {
             // Esperamos que el servicio responda
             const usarioBorrado = await this._usuarioService.borrarUsuario(id);
@@ -114,4 +117,7 @@ export class UsuariosController {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
         }
     }
+
+
+    
 }

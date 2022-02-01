@@ -1,4 +1,4 @@
-import {  Injectable } from '@nestjs/common';
+import {  BadRequestException, Get, Injectable, Render } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import * as bcrypt from 'bcrypt';
@@ -63,4 +63,28 @@ export class AuthService {
             uid: id,
         };
     }
+
+    public async confirmEmail(id: string, email: string) {
+        const user = await this._usuariosService.obtenerUsuarioPorCorreo(email);
+        if (user.isEmailConfirmed) return 'Email already confirmed';
+        return await this._usuariosService.markEmailAsConfirmed(id, email);
+    }
+
+    public async decodeConfirmationToken(token: string) {
+        try {
+          const payload = await this.jwtService.verify(token, {secret: process.env.SECRET_JWT,});
+          if(payload.username){
+            return payload;
+          }else{
+              throw new BadRequestException();
+          }
+        } catch (error) {
+          if (error?.name === 'TokenExpiredError') {
+            throw new BadRequestException('Email confirmation token expired');
+          }
+          throw new BadRequestException('Bad confirmation token');
+        }
+    }
+
+    
 }

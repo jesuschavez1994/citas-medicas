@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../../core/services/auth/jwt-auth.guard';
 import { EventosCalendarioService } from '../../core/services/eventos-calendario/eventos-calendario.service';
 import { MongoQuery, MongoQueryModel } from 'nest-mongo-query-parser';
 import { paginaActual, totalPaginas } from '../../helper/paginacion';
+import { ValidateMongoId } from 'src/core/pipes/validacion-mongo-id.pipe';
 
 @Controller('api/events')
 export class EventosCalendarioController {
@@ -60,7 +61,7 @@ export class EventosCalendarioController {
     @Put('/:id')
     async actualizarEvento(
         @Res() res: Response, 
-        @Param('id') id: string, 
+        @Param('id', ValidateMongoId) id: string, 
         @MongoQuery() query: MongoQueryModel,
         @Body() body: actualizarEventoDTO) {
 
@@ -76,7 +77,7 @@ export class EventosCalendarioController {
 
     @UseGuards(JwtAuthGuard)
     @Delete('/:id')
-    async eliminarEvento(@Res() res: Response, @Param('id') id: string){
+    async eliminarEvento(@Res() res: Response, @Param('id', ValidateMongoId) id: string){
         try {
             // verififcamos que el evento exista
             const eventoEliminado = await this._eventoCalendarioService.eliminarEvento(id);

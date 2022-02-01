@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Res, HttpStatus, Get, Body } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Res, HttpStatus, Get, Body, Render, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { RefreshTokenDTO } from 'src/core/dto/auth.dto';
@@ -104,5 +104,18 @@ export class LoginController {
                 message: 'Error al autenticar usuario'
             })
         }
+    }
+
+    
+    @Get('email-confirmation')
+    //@Render('email-confirmation')
+    async emailConfirmation(@Query() query: any) {
+      const payload = await this._authService.decodeConfirmationToken(query.token);
+    const { username: email, sub: id} = payload 
+      const result = await this._authService.confirmEmail(id, email);
+      console.log(result);
+      let success = true;
+      if (result == 'Email already confirmed') success = false;
+      return { success };
     }
 }

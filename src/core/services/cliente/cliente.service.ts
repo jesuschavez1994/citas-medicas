@@ -42,5 +42,22 @@ export class ClienteService {
         }
     }
 
+    async getAllClients( id: string, query: MongoQueryModel ): Promise<any>{
+        return await Promise.all([
+            // numero total de eventos en el calendario
+            this.client
+            .find({id: id})
+            .count({})
+            .exec(),
+            // listado de eventos paginados
+            this.client
+            .find({id})
+            .limit(query.limit)
+            .skip(query.skip)
+            .populate(query.populate)
+            .exec()
+        ]) 
+    }
+
 
 }

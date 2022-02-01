@@ -58,5 +58,10 @@ export class UsuariosService {
         return await this.user.findByIdAndUpdate(idUsuario, { refreshtoken: refreshtoken, refreshtokenexpires } , {new: true});
     }
 
+    async markEmailAsConfirmed(id:string, email: string) {
+        console.log('markEmailAsConfirmed');
+        return this.user.findByIdAndUpdate(id ,{isEmailConfirmed: true,},{new: true});
+      }
+
 
 }
