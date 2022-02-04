@@ -52,9 +52,9 @@ export class AuthService {
         // renombramos el id
         _user.id = _id;
         // extraemos el email y id de usuario
-       const {name,email, id } = _user;
-       // construimos el payload
-        const payload = { username: email, sub: id };
+        const { name,email, id, role } = _user;
+        // construimos el payload
+        const payload = { username: email, sub: id, role };
         // generamos el token con la informacion del usuario
         return {
             token: this.jwtService.sign(payload),

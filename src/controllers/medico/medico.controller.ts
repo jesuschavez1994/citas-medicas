@@ -25,6 +25,10 @@ import { generateP } from 'src/helper/generar-password-aleatorio';
 import { CrearUsuarioDTO } from 'src/core/dto/usuario.dto';
 import * as bcrypt from 'bcrypt';
 import { MailService } from 'src/core/services/mail/mail.service';
+import { Roles } from 'src/core/decoradores/role.decorator';
+import { Role } from 'src/core/enum/role.enum';
+import { RoleGuard } from 'src/core/guards/role.guard';
+
 
 @Controller('api/medic')
 export class MedicoController {
@@ -34,8 +38,9 @@ export class MedicoController {
         private readonly _specialitys: EspecialidadesService,
         private _mailService:  MailService){}
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RoleGuard)
     @Post('/:id')
+    @Roles(Role.Admin)
     async createMedic(
     @Res() res: Response, 
     @Param('id', ValidateMongoId) iduser: string, 
@@ -62,8 +67,9 @@ export class MedicoController {
         }
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RoleGuard)
     @Post('/:id/client')
+    @Roles(Role.Admin)
     async createNewClient(
         @Res() res: Response, 
         @Body() body: CrearUsuarioDTO){
@@ -73,10 +79,9 @@ export class MedicoController {
             const salt = await bcrypt.genSalt();
             body.password = await bcrypt.hash(body.password, salt);
             const createUser = await this._usuarioService.crearNuevoUsuario( body );
-            return res.status(HttpStatus.OK).json({
-                createUser
-            })
-            
+            return ( createUser ) 
+            ? res.status(HttpStatus.OK).json({message: 'Usuario creado', createUser})
+            : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Ha ocurrido un error' })  
         }catch(error){
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message }); 
         }
