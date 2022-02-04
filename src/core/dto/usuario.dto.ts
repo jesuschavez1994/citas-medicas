@@ -20,7 +20,8 @@ export class CrearUsuarioDTO{
     @IsUserAlreadyExist({message: 'Este correo $value ya ha sido registrado'})
     readonly email: string;
     @IsString()
-    @MinLength(8, {message: (args: ValidationArguments) => { return (args.value.length === 1) ? 'Demasiado corta, la longitud mínima es de 1 carácter.' :'Demasiado corta, la longitud mínima es '+ args.constraints[0] +' caracteres';} })
+    @IsOptional()
+    //@MinLength(8, {message: (args: ValidationArguments) => { return (args.value.length === 1) ? 'Demasiado corta, la longitud mínima es de 1 carácter.' :'Demasiado corta, la longitud mínima es '+ args.constraints[0] +' caracteres';} })
     password?: string;
     @Allow()
     readonly status: boolean;
@@ -55,5 +56,6 @@ export class ActualizarUsuarioDTO{
     @IsOptional()
     readonly avatar?: string;
 }
+
 
 

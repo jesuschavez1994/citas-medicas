@@ -25,7 +25,6 @@ import { ValidateMongoId } from 'src/core/pipes/validacion-mongo-id.pipe';
 import { paginaActual, totalPaginas } from 'src/helper/paginacion';
 const fs   = require('fs');
 const path = require('path');
-// import {} from '../../../upload'
 
 @Controller('api/clients')
 export class ClienteController {

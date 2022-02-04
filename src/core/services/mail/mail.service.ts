@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { CrearUsuarioDTO } from 'src/core/dto/usuario.dto';
 import { UsuarioInterface } from 'src/core/interfaces/usuario.interface';
 
 @Injectable()
@@ -16,6 +17,21 @@ export class MailService {
         template: '/confimacion-correo',
         context: {
           url
+        }
+      });
+    }catch (error) {
+      return error;
+    }
+  }
+
+  async sendUserCreateForMedic({ name, email, password }: CrearUsuarioDTO ){
+    try{
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Bienvenido a Medicitate',
+        template: '/envio-password',
+        context: {
+          name, email, password
         }
       });
     }catch (error) {

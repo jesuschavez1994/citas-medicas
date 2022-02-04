@@ -20,12 +20,19 @@ import { UsuariosService } from 'src/core/services/usuarios/usuarios.service';
 import { EspecialidadesService } from 'src/core/services/especialidades/especialidades.service';
 import { SpecialityModel } from 'src/core/interfaces/specialitys.interface';
 import { ValidateMongoId } from 'src/core/pipes/validacion-mongo-id.pipe';
+import { CreateNewClientDTO } from 'src/core/dto/cliente.dto';
+import { generateP } from 'src/helper/generar-password-aleatorio';
+import { CrearUsuarioDTO } from 'src/core/dto/usuario.dto';
+import * as bcrypt from 'bcrypt';
+import { MailService } from 'src/core/services/mail/mail.service';
+
 @Controller('api/medic')
 export class MedicoController {
     constructor(
         private readonly _medicSrvice: MedicoService, 
         private readonly _usuarioService: UsuariosService,
-        private readonly _specialitys: EspecialidadesService){}
+        private readonly _specialitys: EspecialidadesService,
+        private _mailService:  MailService){}
 
     @UseGuards(JwtAuthGuard)
     @Post('/:id')
@@ -45,28 +52,31 @@ export class MedicoController {
                 })  
             }
             if(status){
-                // let specialitysDB = new SpecialityModel();
-                // let specialitysBody =  new SpecialityModel();
-                // let specialitys = [];
-                
-                // await this._specialitys.getSpecialitys().then( resp => {
-                //     resp.forEach( elements => {
-                //         specialitysDB =  new SpecialityModel(elements);
-                //         body.speciality.forEach( elements =>{
-                //             specialitysBody = new SpecialityModel(elements);
-                //             if(specialitysDB._id == specialitysBody._id){
-                                
-                //             }else{
-
-                //             }
-                //         });
-                //     })
-                // })
                 const medic = await this._medicSrvice.createMedic(iduser, body);
                 return res.status(HttpStatus.OK).json({
                     medic
                 });
             }
+        }catch(error){
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message }); 
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('/:id/client')
+    async createNewClient(
+        @Res() res: Response, 
+        @Body() body: CrearUsuarioDTO){
+        try{
+            body.password = await generateP();
+            await this._mailService.sendUserCreateForMedic(  body );
+            const salt = await bcrypt.genSalt();
+            body.password = await bcrypt.hash(body.password, salt);
+            const createUser = await this._usuarioService.crearNuevoUsuario( body );
+            return res.status(HttpStatus.OK).json({
+                createUser
+            })
+            
         }catch(error){
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message }); 
         }

@@ -4,8 +4,10 @@ import {
     IsNotEmpty, 
     IsDate,
     IsOptional,
-    IsNumber
+    IsNumber,
+    IsEmail
 } from 'class-validator';
+import { IsUserAlreadyExist } from 'src/helper/verificacion-correo';
 
 export class ClientDTO{
     @IsOptional()
@@ -27,4 +29,17 @@ export class ClientDTO{
     @IsOptional()
     @IsString({ message: 'El nombre debe de ser una cadena de texto' })
     readonly nameComplete: string;
+}
+
+
+export class CreateNewClientDTO{
+    @IsNotEmpty({message: 'El nombre es obligatorio'})
+    @IsString({ message: 'El nombre debe de ser una cadena de texto' })
+    readonly name: string;
+    @IsNotEmpty({message: 'El correo es obligatorio'})
+    @IsEmail({ message: 'El correo debe de ser una dirección de correo válida' })
+    @IsUserAlreadyExist({message: 'Este correo $value ya ha sido registrado'})
+    readonly email: string;
+    @IsOptional()
+    password: string;
 }
