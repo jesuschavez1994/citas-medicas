@@ -32,7 +32,7 @@ export class ClienteController {
     constructor(private readonly _clientService: ClienteService, private readonly _usuarioService: UsuariosService){}
 
     @UseGuards(JwtAuthGuard)
-    @Post('/:id')
+    @Post('/users/:id')
     async Cliente(
         @Res() res: Response, 
         @Param('id', ValidateMongoId) idUser: string, 
@@ -63,7 +63,7 @@ export class ClienteController {
     }
 
     //@UseGuards(JwtAuthGuard)
-    @Patch(':id/photo')
+    @Patch('/:id/photo')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
             destination:'./upload/clients',
@@ -127,7 +127,7 @@ export class ClienteController {
                     const { status } = VerifyUser;
                     if( status ){
                         return (client)
-                        ? res.status(HttpStatus.OK).json({client}) 
+                        ? res.status(HttpStatus.OK).json(client) 
                         : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Ha ocurrido un error' })  
                     }else{
                         return res.status(HttpStatus.BAD_REQUEST).json({
@@ -140,7 +140,7 @@ export class ClienteController {
                     const { status } = VerifyUser;
                     if( status ){
                         return (client)
-                        ? res.status(HttpStatus.OK).json({client}) 
+                        ? res.status(HttpStatus.OK).json(client) 
                         : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Ha ocurrido un error' })  
                     }else{
                         return res.status(HttpStatus.BAD_REQUEST).json({
@@ -175,7 +175,7 @@ export class ClienteController {
 
     }
 
-    @Get(':id/photo')
+    @Get('/:id/photo')
     async getPhotoClient(
         @Param('id', ValidateMongoId) id: string, 
         @Res() res: Response){
