@@ -11,7 +11,7 @@ export class ClienteService {
 
     constructor(@InjectModel(Client.name) private client: Model<ClientDocument> ) {}
 
-    async Client(idUser: string,  body: ClientDTO){ 
+    async Client(idUser: string,  body?: ClientDTO){ 
         return  (await this.client.create({...body, user: idUser})).populate('user', 'name');
     }
 

@@ -28,6 +28,7 @@ import { MailService } from 'src/core/services/mail/mail.service';
 import { Roles } from 'src/core/decoradores/role.decorator';
 import { Role } from 'src/core/enum/role.enum';
 import { RoleGuard } from 'src/core/guards/role.guard';
+import { ClienteService } from 'src/core/services/cliente/cliente.service';
 
 
 @Controller('api/medic')
@@ -36,7 +37,8 @@ export class MedicoController {
         private readonly _medicSrvice: MedicoService, 
         private readonly _usuarioService: UsuariosService,
         private readonly _specialitys: EspecialidadesService,
-        private _mailService:  MailService){}
+        private _mailService:  MailService,
+        private readonly _clientService: ClienteService){}
 
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Post('/:id')
@@ -79,8 +81,10 @@ export class MedicoController {
             const salt = await bcrypt.genSalt();
             body.password = await bcrypt.hash(body.password, salt);
             const createUser = await this._usuarioService.crearNuevoUsuario( body );
-            return ( createUser ) 
-            ? res.status(HttpStatus.OK).json({message: 'Usuario creado', createUser})
+            const { id: idUser } = createUser;
+            const createClient = await this._clientService.Client(idUser);
+            return ( createClient ) 
+            ? res.status(HttpStatus.OK).json({message: 'Usuario y cliente creado', createClient})
             : res.status(HttpStatus.BAD_REQUEST).json({ message: 'Ha ocurrido un error' })  
         }catch(error){
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message }); 
